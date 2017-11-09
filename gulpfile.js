@@ -27,7 +27,7 @@ var argv = require('minimist')(process.argv.slice(2), {
   host = {
     path: '',
     port: 3000,
-    html: 'index.html'
+    html: 'dome.html'
   }
   // 配置open
   ,
@@ -60,10 +60,11 @@ var argv = require('minimist')(process.argv.slice(2), {
       src =[    
         './node_modules/zepto/dist/zepto.js',
         './node_modules/html2canvas/dist/html2canvas.js',
+        './node_modules/webuploader/dist/webuploader.html5only.js',
         './src/**/{viewEdit}.js',
         './src/**/mobile/*.js'
       ],
-      dir = ver ? 'release' : 'build';
+      dir = ver ? 'dist' : 'build';
     
     gulp.src(src)
       //合并输出为app.js
@@ -82,11 +83,12 @@ var argv = require('minimist')(process.argv.slice(2), {
     ver = ver === 'open';
     var src = [    
         './node_modules/zepto/dist/zepto.js',
-        './node_modules/html2canvas/dist/html2canvas.js',
+        './node_modules/html2canvas/dist/html2canvas.js',        
+        './node_modules/webuploader/dist/webuploader.html5only.js',
         './src/**/{viewEdit}.js',
         './src/**/mobile/*.js'
       ],
-      dir = ver ? 'release' : 'build';
+      dir = ver ? 'dist' : 'build';
 
     return gulp.src(src)
       //合并输出为app.js
@@ -103,7 +105,7 @@ var argv = require('minimist')(process.argv.slice(2), {
     ver = ver === 'open';
 
     var src = ['./src/**/*.css'],
-      dir = ver ? 'release' : 'build',
+      dir = ver ? 'dist' : 'build',
 
       noteNew = JSON.parse(JSON.stringify(note));
     noteNew[1].js = '';
@@ -118,7 +120,7 @@ var argv = require('minimist')(process.argv.slice(2), {
   font: function(ver) {
     ver = ver === 'open';
 
-    var dir = ver ? 'release' : 'build';
+    var dir = ver ? 'dist' : 'build';
 
     return gulp.src('./src/font/*')
       .pipe(rename({}))
@@ -131,7 +133,7 @@ var argv = require('minimist')(process.argv.slice(2), {
     ver = ver === 'open';
 
     var src = ['./src/**/*.{png,jpg,gif,html,mp3,json,svg}'],
-      dir = ver ? 'release' : 'build';
+      dir = ver ? 'dist' : 'build';
 
     gulp.src(src).pipe(rename({}))
       .pipe(gulp.dest('./' + dir));
@@ -174,14 +176,14 @@ gulp.task('clear', function(cb) {
   return del(['./build/*'], cb);
 });
 gulp.task('clearRelease', function(cb) {
-  return del(['./release/*'], cb);
+  return del(['./dist/*'], cb);
 });
 
 
-//开源版
+//压缩版本
 gulp.task('default', ['clearRelease'], function() { //命令：gulp
   for (var key in task) {
-    if (key != "watch" && key != "open" && key != "minjs") {
+    if (key != "watch" && key != "open" && key != "alljs") {
       task[key]('open');
     }
   }
@@ -189,8 +191,8 @@ gulp.task('default', ['clearRelease'], function() { //命令：gulp
 
 gulp.task('local', function() { //命令：监听
   for (var key in task) {
-    if (key != "watch") {
-      task[key]('open');
+    if (key != "watch"  && key != "minjs" ) {
+      task[key]();
     }
   }
 });
@@ -198,8 +200,8 @@ gulp.task('local', function() { //命令：监听
 //完整任务
 gulp.task('all', ['clear'], function() { //命令：gulp all，过滤lwj：gulp all --open
   for (var key in task) {
-    if (key != "watch" && key != "open" && key != "alljs") {
-      task[key]('open');
+    if (key != "watch" && key != "open" && key != "minjs") {
+      task[key]();
     }
   }
 });

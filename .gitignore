@@ -18,5 +18,5 @@ node_modules/
 _site/
 run.bat
 dir.txt
-release/
+dist/
 bower_components/
