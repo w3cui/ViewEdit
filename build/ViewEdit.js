@@ -1,5 +1,8 @@
-/** viewedit-v1.0.0 ISC License By https://github.com/w3cui/ViewEdit#readme */
- /* Zepto v1.2.0 - zepto event ajax form ie - zeptojs.com/license */
+/**
+* viewedit-v1.0.0 ISC License By 
+* github: https://github.com/w3cui/ViewEdit#readme
+**/
+/* Zepto v1.2.0 - zepto event ajax form ie - zeptojs.com/license */
 (function(global, factory) {
   if (typeof define === 'function' && define.amd)
     define(function() { return factory(global) })

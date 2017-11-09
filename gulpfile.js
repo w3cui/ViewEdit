@@ -10,7 +10,6 @@ var header = require('gulp-header');
 var del = require('del');
 var gulpif = require('gulp-if');
 var minimist = require('minimist');
-
 var gulpOpen = require('gulp-open');
 var os = require('os');
 var connect = require('gulp-connect');
@@ -27,7 +26,7 @@ var argv = require('minimist')(process.argv.slice(2), {
   host = {
     path: '',
     port: 3000,
-    html: 'dome.html'
+    html: 'index.html'
   }
   // 配置open
   ,
@@ -37,7 +36,7 @@ var argv = require('minimist')(process.argv.slice(2), {
 
 //注释
 , note = [
-  '/** <%= pkg.name %>-v<%= pkg.version %> <%= pkg.license %> License By <%= pkg.homepage %> */\n <%= js %>', {
+  '/**\n* <%= pkg.name %>-v<%= pkg.version %> <%= pkg.license %> License By \n* github: <%= pkg.homepage %>\n**/\n<%= js %>', {
     pkg: pkg,
     // js: "var modsConfig = " + JSON.stringify(config) + ";"
     js: ""
