@@ -1,5 +1,5 @@
 var pkg = require('./package.json');
-var config = require('./config.json');
+// var config = require('./config.json');
 
 var gulp = require('gulp');
 var uglify = require('gulp-uglify');
@@ -10,6 +10,11 @@ var header = require('gulp-header');
 var del = require('del');
 var gulpif = require('gulp-if');
 var minimist = require('minimist');
+
+var gulpOpen = require('gulp-open');
+var os = require('os');
+var connect = require('gulp-connect');
+var watch = require('gulp-watch');
 
 //获取参数
 var argv = require('minimist')(process.argv.slice(2), {
@@ -40,25 +45,32 @@ var argv = require('minimist')(process.argv.slice(2), {
 ]
 
 //模块
-, mods = config.moduleType
+// , mods = config.moduleType
 
 //任务
 , task = {
 
   //压缩js模块
-  minjs: function(ver) {
+  minjs: (ver) => {
     ver = ver === 'open';
-
     //可指定模块压缩，eg：gulp minjs --mod 
     var mod = argv.mod ? function() {
         return '(' + argv.mod.replace(/,/g, '|') + ')';
       }() : '',
-      src = [
-        './src/**/*' + mod + '.js', '!./src/**/mobile/*.js'
+      src =[    
+        './node_modules/zepto/dist/zepto.js',
+        './node_modules/html2canvas/dist/html2canvas.js',
+        './src/**/{viewEdit}.js',
+        './src/**/mobile/*.js'
       ],
       dir = ver ? 'release' : 'build';
-
+    
     gulp.src(src)
+      //合并输出为app.js
+      .pipe(concat('ViewEdit.js', {
+        newLine: ''
+      }))      
+      .pipe(uglify())
       .pipe(header.apply(null, note))
       .pipe(gulp.dest('./' + dir));
 
@@ -68,25 +80,21 @@ var argv = require('minimist')(process.argv.slice(2), {
   ,
   alljs: function(ver) {
     ver = ver === 'open';
-    var src = [
-        './src/**/{lwj,all,' + mods + '}.js', '!./src/**/mobile/*.js'
+    var src = [    
+        './node_modules/zepto/dist/zepto.js',
+        './node_modules/html2canvas/dist/html2canvas.js',
+        './src/**/{viewEdit}.js',
+        './src/**/mobile/*.js'
       ],
       dir = ver ? 'release' : 'build';
 
     return gulp.src(src)
-      .pipe(uglify())
       //合并输出为app.js
-      .pipe(concat('lwj.all.js', {
+      .pipe(concat('ViewEdit.js', {
         newLine: ''
       }))
       .pipe(header.apply(null, note))
-      .pipe(gulp.dest('./' + dir + '/js/dest/'));
-  }
-
-  //打包mobile模块集合
-  ,
-  mobile: function(ver) {
-
+      .pipe(gulp.dest('./' + dir + ''));
   }
 
   //压缩css文件
@@ -96,6 +104,7 @@ var argv = require('minimist')(process.argv.slice(2), {
 
     var src = ['./src/**/*.css'],
       dir = ver ? 'release' : 'build',
+
       noteNew = JSON.parse(JSON.stringify(note));
     noteNew[1].js = '';
     return gulp.src(src).pipe(minify({
@@ -123,7 +132,6 @@ var argv = require('minimist')(process.argv.slice(2), {
 
     var src = ['./src/**/*.{png,jpg,gif,html,mp3,json,svg}'],
       dir = ver ? 'release' : 'build';
-
 
     gulp.src(src).pipe(rename({}))
       .pipe(gulp.dest('./' + dir));
@@ -169,19 +177,11 @@ gulp.task('clearRelease', function(cb) {
   return del(['./release/*'], cb);
 });
 
-gulp.task('minjs', task.minjs);
-gulp.task('alljs', task.alljs);
-gulp.task('mobile', task.mobile);
-gulp.task('mincss', task.mincss);
-gulp.task('font', task.font);
-gulp.task('mv', task.mv);
-gulp.task('watch', task.watch);
-gulp.task('open', task.open);
 
 //开源版
 gulp.task('default', ['clearRelease'], function() { //命令：gulp
   for (var key in task) {
-    if (key != "watch" && key != "open") {
+    if (key != "watch" && key != "open" && key != "minjs") {
       task[key]('open');
     }
   }
@@ -198,7 +198,7 @@ gulp.task('local', function() { //命令：监听
 //完整任务
 gulp.task('all', ['clear'], function() { //命令：gulp all，过滤lwj：gulp all --open
   for (var key in task) {
-    if (key != "watch" && key != "open") {
+    if (key != "watch" && key != "open" && key != "alljs") {
       task[key]('open');
     }
   }
