@@ -82,9 +82,9 @@ var argv = require('minimist')(process.argv.slice(2), {
     ver = ver === 'open';
     var src = [    
         './node_modules/zepto/dist/zepto.js',
-        './node_modules/html2canvas/dist/html2canvas.js',        
-        './node_modules/webuploader/dist/webuploader.html5only.js',
-        './src/**/{viewEdit}.js',
+        //'./node_modules/html2canvas/dist/html2canvas.svg.js',        
+        //'./node_modules/webuploader/dist/webuploader.html5only.js',
+        './src/**/viewEdit.js',
         './src/**/mobile/*.js'
       ],
       dir = ver ? 'dist' : 'build';
@@ -143,8 +143,8 @@ var argv = require('minimist')(process.argv.slice(2), {
   watch: function(ver) {
     return gulp.watch(['./src/**/*.{js,css}'], function() {
       for (var key in task) {
-        if (key != "watch" && key != "open") {
-          task[key]('open');
+        if (key != "watch" && key != "open" && key != "minjs" ) {
+          task[key]();
         }
       }
     });
@@ -190,7 +190,7 @@ gulp.task('default', ['clearRelease'], function() { //命令：gulp
 
 gulp.task('local', function() { //命令：监听
   for (var key in task) {
-    if (key != "watch"  && key != "minjs" ) {
+    if ( key == "open" ) {
       task[key]();
     }
   }

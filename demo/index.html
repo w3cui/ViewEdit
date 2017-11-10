@@ -1,0 +1,19 @@
+<html>
+	<head></head>
+	<body>
+		<div id="edit" style="position: relative; top: 300px;left: 300px;" page-key="key001" >
+			<p>编辑区域</p>
+			<img src="" alt="">
+		</div>
+	</body>
+</html>
+<script type="text/javascript" src="http://localhost:3000/build/ViewEdit.js"></script>
+<script type="text/javascript">
+	var edit = VE.init({
+			el:"page-key",
+			upload:{
+				server:"测试"
+			}
+		});
+	console.log(edit);
+</script>
