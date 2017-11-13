@@ -4,10 +4,25 @@
 	var fn = $viewEdit.__proto__;
 	fn.template = function(data, type) {
 		switch (type) {
+
 			case "main":
-				console.log(data);
 				return '<div class="blockBottom">"当前可编辑区域<span >' + (this.cacheList.length || 0) + '</span>个,是否修改？"</span><a>保存</a><a href="">取消</a>' + data.addBtn + '</div>';
-				break;
+			break;
+
+			case "block":
+				return '<div class="block_l blockbk"></div><div class="block_r blockbk"></div><div class="block_t blockbk"></div><div class="block_b blockbk"></div>'; 
+			break;
+
+			case "img":
+				return '<li imglist = "'+data.index+'"><div>\
+						<p class="img"><img src="'+data.src+'" /><a id="file_'+data.index+'" >修改</a></p>\
+						<input type="hidden" class="fl" value="'+data.src+'" name="urlsrc" />\
+						<label><span><input type="checkbox" name="checkbox" '+data.checkbox+' />是否开启预加载？</span></label>\
+						<div class="divupimg" style = "'+data.display+'"><input type="text" placeholder="默认图尺寸" name="urlmin" value="'+data.defobj.minsrc+'" /><input type="text" placeholder="高清图尺寸"  name="urlmax"  value="'+data.defobj.maxsrc+'" /></div>\
+						<textarea placeholder="图片alt" class="text" name="alt"  >'+data.alt+'</textarea>\
+					</div></li>';
+			break;
+
 			default:
 				;
 		}
@@ -50,7 +65,7 @@
 		$(".blockbk").hide();
 		var curveobj = this.ergodic().calculationErgodic(_this);
 		if($(".blockbk").length == 0){
-			$("body").append('<div class="block_l blockbk"></div><div class="block_r blockbk"></div><div class="block_t blockbk"></div><div class="block_b blockbk"></div>');
+			$("body").append(this.template({},"block"));
 			draw();
 		}else{
 			draw();
@@ -120,6 +135,7 @@
 	// 构造不同类型处理方式	
 	fn.ergodic = function() {
 		var $this = this;
+		var $editType = this.editType();
 		return {
 			imgErgodic: function(_this, prentThis) {
 				var object = this.calculationErgodic(prentThis);
@@ -131,7 +147,8 @@
 					$("#Blick" + $(prentThis).attr($this.config.el)).show();
 				}
 				$("#Blick" + $(prentThis).attr($this.config.el)).find(".img").unbind('click').click(function() {
-					$this.imgTpl(prentThis);
+					console.log(prentThis);
+					$editType.imgTpl(prentThis);
 				});
 			},
 			linkErgodic: function(_this, prentThis) {
@@ -144,7 +161,7 @@
 					$("#Blick" + $(prentThis).attr($this.config.el)).show();
 				}
 				$("#Blick" + $(prentThis).attr($this.config.el)).find(".link").unbind('click').click(function(event) {
-					$this.linkTpl(prentThis, event);
+					$editType.linkTpl(prentThis, event);
 				});
 			},
 			textErgodic: function() {},
