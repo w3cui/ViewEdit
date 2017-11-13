@@ -58,7 +58,7 @@ var argv = require('minimist')(process.argv.slice(2), {
       }() : '',
       src =[    
         './node_modules/zepto/dist/zepto.js',
-        './node_modules/html2canvas/dist/html2canvas.js',
+        //'./node_modules/html2canvas/dist/html2canvas.js',
         './node_modules/webuploader/dist/webuploader.html5only.js',
         './src/**/{viewEdit}.js',
         './src/**/mobile/*.js'
@@ -81,7 +81,7 @@ var argv = require('minimist')(process.argv.slice(2), {
   alljs: function(ver) {
     ver = ver === 'open';
     var src = [    
-        './node_modules/zepto/dist/zepto.js',
+        './node_modules/jquery/dist/jquery.js',
         //'./node_modules/html2canvas/dist/html2canvas.svg.js',        
         //'./node_modules/webuploader/dist/webuploader.html5only.js',
         './src/**/viewEdit.js',
@@ -104,11 +104,15 @@ var argv = require('minimist')(process.argv.slice(2), {
     ver = ver === 'open';
 
     var src = ['./src/**/*.css'],
-      dir = ver ? 'dist' : 'build',
+      dir = ver ? 'dist/style' : 'build/style',
 
       noteNew = JSON.parse(JSON.stringify(note));
     noteNew[1].js = '';
-    return gulp.src(src).pipe(minify({
+    return gulp.src(src)
+    .pipe(concat('ViewEdit.css', {
+        newLine: ''
+      }))
+    .pipe(minify({
         compatibility: 'ie7'
       })).pipe(header.apply(null, noteNew))
       .pipe(gulp.dest('./' + dir + '/'));

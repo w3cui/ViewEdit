@@ -4,7 +4,7 @@
 	  	构建基础配置
 	  */
 	var config = {
-		el: "*[page_key]",
+		el: "page_key",
 		// 提交地址
 		serverUrl: "/api/page/savePage",
 		// 获取资源项目地址
@@ -47,8 +47,8 @@
 		this.v = '1.0.0';
 		
 		// 查找绑定可编辑的元素
-		this.el = () => {
-			return $("*[" + $t + "]");
+		this.el =function ()  {
+			return $("*[" + this.config.el + "]");
 		};
 
 		// 复值config
@@ -58,7 +58,7 @@
 		this.cacheList = new Array();
 
 		// 初始化
-		this.init = (api) => {
+		this.init = function (api)  {
 			var $this = this;
 			this.config = (function(api, config) {
 				var copyConfig = $this.api.copy(config);			
@@ -70,7 +70,11 @@
 					copyConfig.upload = upload;
 				}
 				return copyConfig;
-			})(api, config); 
+			})(api, config);
+			// 统计可编辑区域
+			this.cacheList = this.el();
+			// 启动插件
+			this.resize();
 			return this;
 		}
 		
@@ -79,26 +83,26 @@
 	var fn = viewEdit.prototype;
 
 	// 判断取出图片地址 
-	fn.isSrc = ($src) => {
+	fn.isSrc =function ($src)  {
 		var retSrc = $src.match(/(.*)\@/) ? $src.match(/(.*)\@/)[1] :
 			$src.match(/(.*)\?/) ? $src.match(/(.*)\?/)[1] : $src;
 		return retSrc;
 	};
 
 	// 添加时间间隔
-	fn.BlockDate =  () => {
+	fn.BlockDate = function ()  {
 		var d = new Date;
 		return d.getTime();
 	};
 	// 判断图片截取规则
-	fn.isOss = ($src) => {
+	fn.isOss =function ($src)  {
 		var retSrc = $src.match(/\@(.*)/) ? $src.match(/\@(.*)/)[0] :
 			$src.match(/\?(.*)/) ? $src.match(/\?(.*)/)[0] : "";
 		return retSrc;
 	};
 
 	//异常提示
-	var error = (msg) => {
+	var error =function (msg)  {
 		win.console && console.error && console.error('viewEidt hint: ' + msg);
 	}; 
 	win.VE = new viewEdit();

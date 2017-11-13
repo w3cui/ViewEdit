@@ -1,0 +1,25 @@
+.blockimglist{ padding:10px 0;}
+.blockimglist li{ width: 20%; float: left; }
+.blockimglist li > div{  background: #fafafa; border:solid 1px #ccc; margin:0px 5px 10px 5px; text-align:left;}
+.blockimglist li p.img{  line-height: 150px; text-align: center;    vertical-align: middle;margin-bottom:10px; border-bottom: solid 1px #ccc; position: relative; width: 100%; text-align: center; background: #fff; height: 150px;  }
+.blockimglist li p.img img{ max-height: 100%; max-width: 100%; display: inline-block; margin:auto; }
+.blockimglist li p.img a{ opacity: .7;line-height: 20px; margin: -0px 0 0 -20px; position: absolute; left: 50%; top: 50px; background: #000; color: #fff; border-radius: 3px; padding: 3px 10px; font-size: 12px;cursor: pointer; }
+.blockimglist li p.img canvas{max-height: 100%; max-width: 100%; margin:auto;}
+.blockimglist li p.img span{ position:absolute; left:0; top:0; width:100%; height:100%; color: #fff;background: rgba(0,0,0,0.1);display: block; text-shadow: 1px 1px 0px #555;}
+.blockimglist li p.img a:hover{ background: #4da1da; opacity: 1; }
+.blockimglist li p.img div > *{ opacity:0;}
+.blockimglist li > div > .text,.blockimglist li > div > input,.blockimglist li > div > div.text{ line-height: 22px; display: block; margin:auto; background: #fff; width: 90%; margin-bottom:10px; font-size: 12px; border: #ccc 1px solid;}
+.blockimglist li > div > div.text img{ max-width: 100%; }
+.blockimglist li > div > div.divupimg{ width: 90%;    margin: auto;}
+.blockimglist li > div > div.divupimg *{float: left; font-size:12px;height:30px;line-height:30px; color:#555; }
+.blockimglist li > div > div.divupimg input{background:#fff; border:solid 1px #ccc; width:100%;border: solid 1px #ccc;position: relative;left: -1px;    margin-bottom: 10px;text-indent: .5em;}
+.blockimglist li label{color:#555; display: block; padding-bottom: 5px;width: 90%;margin: auto;font-size: 14px;}
+.blockimglist li label input[type="checkbox"]{-webkit-appearance: checkbox;}
+.blockimglist li .file{position: absolute; left: 0; top: 0; opacity: 0; width: 100%; height: 100%;  }
+.blockBottom{ position: fixed; bottom: 0px; left: 0px; width: 100%; z-index: 9999; background: #fff; box-shadow: 0px -2px 3px #ccc; padding: 10px 0; text-align: center; }
+.blockBottom a{ display: inline-block; background: #4da1da; color: #fff; font-size: 12px; margin: 0px 5px; padding: 5px 20px; cursor:pointer; }
+.blockBottom span{ color: #ff4e00; }
+.block_t,.block_r,.block_b,.block_l{width:1px;height:1px;overflow: hidden; position:absolute; z-index:890; left:0; top:0;}
+.block_t,.block_b{background:url(data:image/gif;base64,R0lGODlhBgABAKEAAP///wAAADY2Nv///yH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQACgD/ACwAAAAABgABAAACAxQuUgAh+QQBCgADACwAAAAABgABAAACA5SAUgAh+QQBCgADACwAAAAABgABAAACA5SBBQAh+QQBCgADACwAAAAABgABAAACA4QOUAAh+QQBCgADACwAAAAABgABAAACAwSEUAAh+QQBCgADACwAAAAABgABAAACA4SFBQA7);}
+.block_l,.block_r{background:url(data:image/gif;base64,R0lGODlhAQAGAKEAAP///wAAADY2Nv///yH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQACgD/ACwAAAAAAQAGAAACAxQuUgAh+QQBCgADACwAAAAAAQAGAAACA5SAUgAh+QQBCgADACwAAAAAAQAGAAACA5SBBQAh+QQBCgADACwAAAAAAQAGAAACA4QOUAAh+QQBCgADACwAAAAAAQAGAAACAwSEUAAh+QQBCgADACwAAAAAAQAGAAACA4SFBQA7);}
+*[contentEditable="true"]{ background:#fff;}
