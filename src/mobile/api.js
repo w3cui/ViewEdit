@@ -1,12 +1,13 @@
 !(function(win, $, $viewEdit) {
 	"use strict";
 	// 通用方法
-	console.log($viewEdit);
 	var fn = $viewEdit.__proto__;
 	fn.api = (function() {
 		return {
 			ajax: function(ajaxData, callback, error) {
-				error = error ? error : function() {};
+				error = error ? error : function(data) {
+					$viewEdit.layer.msg('服务器繁忙请稍后再试！');
+				};
 				var $this = this;
 				ajaxData.url = ajaxData.url + "?t=" + Math.random();
 				ajaxData.type = ajaxData.type ? ajaxData.type : "post";

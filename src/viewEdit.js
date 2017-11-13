@@ -72,7 +72,7 @@
 				return copyConfig;
 			})(api, config);
 			// 统计可编辑区域
-			this.cacheList = this.el();
+			//this.cacheList = this.el();
 			// 启动插件
 			this.resize();
 			return this;

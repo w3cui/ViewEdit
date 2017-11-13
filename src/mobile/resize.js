@@ -2,11 +2,35 @@
 	"use strict";
 	// 初始化
 	var fn = $viewEdit.__proto__;
-	fn.resize = function(){
-		if(this.cacheList.length == 0 ) return false;
+	fn.resize = function(){		
 		$("body").append(this.template({addBtn:"<a>新增</a>"},"main"));
-		//this.elockOff(this.cacheList);
 		this.elockOff();
+		if(this.cacheList.length == 0 ) return false;
+		//this.elockOff(this.cacheList);
+		// 性能优化 检查显示的元素调用编辑按钮
+		var datahiden= new Array();
+
+		$.each(this.el(), function(index) {
+			if($(this).is(":hidden")){
+				datahiden.push($(this).attr($viewEdit.config.el));
+			}
+		});
+
+		setInterval(function(){
+			$.each($("*["+ $viewEdit.config.el +"]:hidden"), function(index, val) {
+				if($(this).attr($viewEdit.config.el)!=datahiden[index]){
+					$this.elockOff();
+					datahiden = new Array();
+					$.each($this.el(), function(index) {
+						if($(this).is(":hidden")){
+							datahiden.push($(this).attr($viewEdit.config.el));
+						}
+					});					
+					return false;
+				}
+			});
+		},1000);
+
 		return this;
 	};
 	// 取消编辑
@@ -16,7 +40,6 @@
 	// 启动编辑
 	fn.elockOff = function() {
 		var $this = this;	
-
 		// 创建存储dom 
 		$.each(this.el(), function() {
 			var valData = {
@@ -28,7 +51,8 @@
 		});
 
 		// 获取
-		$.each(this.cacheList, function(index, val) {
+		$.each(this.el(), function(index, val) {
+			console.log(this);
 			$this.ergodicType(this);			
 		});
 

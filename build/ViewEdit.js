@@ -19932,7 +19932,7 @@ module.exports = XHR;
 				return copyConfig;
 			})(api, config);
 			// 统计可编辑区域
-			this.cacheList = this.el();
+			//this.cacheList = this.el();
 			// 启动插件
 			this.resize();
 			return this;
@@ -19969,12 +19969,13 @@ module.exports = XHR;
 })(window, $);!(function(win, $, $viewEdit) {
 	"use strict";
 	// 通用方法
-	console.log($viewEdit);
 	var fn = $viewEdit.__proto__;
 	fn.api = (function() {
 		return {
 			ajax: function(ajaxData, callback, error) {
-				error = error ? error : function() {};
+				error = error ? error : function(data) {
+					$viewEdit.layer.msg('服务器繁忙请稍后再试！');
+				};
 				var $this = this;
 				ajaxData.url = ajaxData.url + "?t=" + Math.random();
 				ajaxData.type = ajaxData.type ? ajaxData.type : "post";
@@ -20061,8 +20062,8 @@ module.exports = XHR;
 					defobj = new Array();
 
 				$.each($this.cacheList, function(index, val) {
-					if (this.key == $(prentThis).attr("*[" + $this.config.el + "]")) {
-						defhtmltext = $("<div>" + $(this).html() + "</div>");
+					if (this.key == $(prentThis).attr($this.config.el)) {
+						defhtmltext = $("<div>" + this.value + "</div>");
 					}
 				});
 
@@ -21537,11 +21538,35 @@ module.exports = XHR;
 	"use strict";
 	// 初始化
 	var fn = $viewEdit.__proto__;
-	fn.resize = function(){
-		if(this.cacheList.length == 0 ) return false;
+	fn.resize = function(){		
 		$("body").append(this.template({addBtn:"<a>新增</a>"},"main"));
-		//this.elockOff(this.cacheList);
 		this.elockOff();
+		if(this.cacheList.length == 0 ) return false;
+		//this.elockOff(this.cacheList);
+		// 性能优化 检查显示的元素调用编辑按钮
+		var datahiden= new Array();
+
+		$.each(this.el(), function(index) {
+			if($(this).is(":hidden")){
+				datahiden.push($(this).attr($viewEdit.config.el));
+			}
+		});
+
+		setInterval(function(){
+			$.each($("*["+ $viewEdit.config.el +"]:hidden"), function(index, val) {
+				if($(this).attr($viewEdit.config.el)!=datahiden[index]){
+					$this.elockOff();
+					datahiden = new Array();
+					$.each($this.el(), function(index) {
+						if($(this).is(":hidden")){
+							datahiden.push($(this).attr($viewEdit.config.el));
+						}
+					});					
+					return false;
+				}
+			});
+		},1000);
+
 		return this;
 	};
 	// 取消编辑
@@ -21551,7 +21576,6 @@ module.exports = XHR;
 	// 启动编辑
 	fn.elockOff = function() {
 		var $this = this;	
-
 		// 创建存储dom 
 		$.each(this.el(), function() {
 			var valData = {
@@ -21563,7 +21587,8 @@ module.exports = XHR;
 		});
 
 		// 获取
-		$.each(this.cacheList, function(index, val) {
+		$.each(this.el(), function(index, val) {
+			console.log(this);
 			$this.ergodicType(this);			
 		});
 

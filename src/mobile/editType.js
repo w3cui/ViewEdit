@@ -13,8 +13,8 @@
 					defobj = new Array();
 
 				$.each($this.cacheList, function(index, val) {
-					if (this.key == $(prentThis).attr("*[" + $this.config.el + "]")) {
-						defhtmltext = $("<div>" + $(this).html() + "</div>");
+					if (this.key == $(prentThis).attr($this.config.el)) {
+						defhtmltext = $("<div>" + this.value + "</div>");
 					}
 				});
 
