@@ -161,4 +161,4 @@
 		};
 	}
 
-})(window, $, VE);
+})(window, $, window.VE);

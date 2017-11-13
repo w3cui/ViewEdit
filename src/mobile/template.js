@@ -224,4 +224,4 @@
 		return this;
 	};
 
-})(window, $, VE);
+})(window, $, window.VE);

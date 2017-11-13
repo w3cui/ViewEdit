@@ -1322,4 +1322,4 @@
 		);
 		return layer;
 	})();
-})(window, $, VE);
+})(window, $, window.VE);

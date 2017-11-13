@@ -105,6 +105,5 @@
 	var error =function (msg)  {
 		win.console && console.error && console.error('viewEidt hint: ' + msg);
 	}; 
-	win.VE = new viewEdit();
-
+	window.VE = new viewEdit();
 })(window, $);

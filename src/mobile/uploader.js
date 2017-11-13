@@ -27,12 +27,14 @@
 				return false;
 			}
 		});
+
 		// 生成预览图
 		uploader.on("fileQueued", function(file, percentage) {
 			index = $viewEdit.layer.load(0, {
 				shade: [0.1, '#fff']
 			});
 		});
+
 		// 服务器回调
 		uploader.on('uploadSuccess', function(file, response) {
 			$viewEdit.layer.close(index);
@@ -55,4 +57,4 @@
 		});
 
 	};
-})(window, $, VE);
+})(window, $, window.VE);
