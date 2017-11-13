@@ -52,8 +52,9 @@
 			}
 		});
 		//所有文件上传后触发    
-		uploader.on('uploadComplete', function(file) {
-
+		uploader.on('uploadError', function(file) {
+			$viewEdit.layer.close(index);
+			$viewEdit.layer.msg("服务器链接失败！");
 		});
 
 	};

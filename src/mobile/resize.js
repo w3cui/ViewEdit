@@ -52,7 +52,6 @@
 
 		// 获取
 		$.each(this.el(), function(index, val) {
-			console.log(this);
 			$this.ergodicType(this);			
 		});
 

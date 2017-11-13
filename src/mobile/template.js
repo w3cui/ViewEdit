@@ -175,7 +175,6 @@
 					$("#Blick" + $(prentThis).attr($this.config.el)).show();
 				}
 				$("#Blick" + $(prentThis).attr($this.config.el)).find(".img").unbind('click').click(function() {
-					console.log(prentThis);
 					$editType.imgTpl(prentThis);
 				});
 			},

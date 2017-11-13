@@ -21588,7 +21588,6 @@ module.exports = XHR;
 
 		// 获取
 		$.each(this.el(), function(index, val) {
-			console.log(this);
 			$this.ergodicType(this);			
 		});
 
@@ -21831,7 +21830,6 @@ module.exports = XHR;
 					$("#Blick" + $(prentThis).attr($this.config.el)).show();
 				}
 				$("#Blick" + $(prentThis).attr($this.config.el)).find(".img").unbind('click').click(function() {
-					console.log(prentThis);
 					$editType.imgTpl(prentThis);
 				});
 			},
@@ -21934,8 +21932,9 @@ module.exports = XHR;
 			}
 		});
 		//所有文件上传后触发    
-		uploader.on('uploadComplete', function(file) {
-
+		uploader.on('uploadError', function(file) {
+			$viewEdit.layer.close(index);
+			$viewEdit.layer.msg("服务器链接失败！");
 		});
 
 	};
