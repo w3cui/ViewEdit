@@ -15,10 +15,23 @@
 
 	// 启动编辑
 	fn.elockOff = function() {
-		var $this = this;		
+		var $this = this;	
+
+		// 创建存储dom 
+		$.each(this.el(), function() {
+			var valData = {
+				"key" : $(this).attr($this.config.el),
+				"value" : $(this).html()
+			};
+			$this.cacheList.push(valData);
+			//$this.ergodicType(valData);
+		});
+
+		// 获取
 		$.each(this.cacheList, function(index, val) {
 			$this.ergodicType(this);			
 		});
+
 		$(".blockBottom").find("a").on("click",function(){
 				if($(this).text() == "保存"){
 					var index = $viewEdit.layer.load(0, {shade: [0.1,'#fff'] });

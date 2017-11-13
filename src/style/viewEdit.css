@@ -1,7 +1,7 @@
 .blockimglist{ padding:10px 0;}
-.blockimglist li{ width: 20%; float: left; }
+.blockimglist li{ width: 20%; float: left;list-style-type: none; padding: 0; margin: 0; }
 .blockimglist li > div{  background: #fafafa; border:solid 1px #ccc; margin:0px 5px 10px 5px; text-align:left;}
-.blockimglist li p.img{  line-height: 150px; text-align: center;    vertical-align: middle;margin-bottom:10px; border-bottom: solid 1px #ccc; position: relative; width: 100%; text-align: center; background: #fff; height: 150px;  }
+.blockimglist li p.img{ padding: 0; margin: 0; line-height: 150px; text-align: center;    vertical-align: middle;margin-bottom:10px; border-bottom: solid 1px #ccc; position: relative; width: 100%; text-align: center; background: #fff; height: 150px;  }
 .blockimglist li p.img img{ max-height: 100%; max-width: 100%; display: inline-block; margin:auto; }
 .blockimglist li p.img a{ opacity: .7;line-height: 20px; margin: -0px 0 0 -20px; position: absolute; left: 50%; top: 50px; background: #000; color: #fff; border-radius: 3px; padding: 3px 10px; font-size: 12px;cursor: pointer; }
 .blockimglist li p.img canvas{max-height: 100%; max-width: 100%; margin:auto;}

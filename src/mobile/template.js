@@ -23,10 +23,40 @@
 					</div></li>';
 			break;
 
-			default:
-				;
+			case "link":
+				return '<li imglist = "'+data.index+'"><div>\
+						<p class="img" id="boxdivlist'+data.index+'" ><span style="font-size: 30px;"  >Link</span></p>\
+						<input type="text" name="href" placeholder="链接地址" value="'+data.href+'"  />\
+						<textarea placeholder="Title信息" class="text" name="title"  >'+data.title+'</textarea>\
+					</div></li>';
+			break;
+			default:;
 		}
 		return this;
+	};
+	/*
+		*	@设置延迟加载修改初始数据
+		*	@key =>>$t  @data =>> 小图于大图尺寸  @ulr  =>> 更新图片地址  @index =>> 图片的index
+		*/
+	fn.cacheListUp = function($key,$data,$url,$index) {
+		var $this = this;
+		$.each(this.cacheList, function(index, val) {
+			if($key == this.key){
+				var _this = $("<div>"+this.value+"</div>");
+				$.each(_this.find("img"), function(index, val) {
+					if(index == $index){
+						if($data.minsrc != ""){
+							
+							var host = $this.isSrc($url) == "" ? $url : $this.isSrc($url);			
+							$(this).attr("src",host + $data.minsrc);
+						}
+						$(this).attr("data-original",host + $data.maxsrc)
+					}
+				});
+
+				this.value = _this.html();
+			}
+		});
 	};
 	// 查找变化后的元素
 	fn.contrastList = function() {
@@ -41,9 +71,7 @@
 						$(this).attr("src",$(this).attr("minsrc")).removeAttr('minsrc');
 					}else{							
 						var url = $("<div>"+$this.cacheList[index1].value+"</div>").find("img:eq("+index+")").attr("src");
-						//var min = url.match(/\@(.*)/) ? url.match(/\@(.*)/)[0] : "";
 						var min = $this.isOss(url);
-						//var tpurl = $(this).attr("data-original").match(/(.*)\@/) ?  $(this).attr("data-original").match(/(.*)\@/)[1] : $(this).attr("data-original") ;
 						var tpurl = $this.isSrc($(this).attr("data-original")) ;
 						$(this).attr("src",tpurl+min).removeAttr('minsrc')
 					}
@@ -195,4 +223,5 @@
 		});
 		return this;
 	};
+
 })(window, $, VE);

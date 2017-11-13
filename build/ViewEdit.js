@@ -20047,87 +20047,90 @@ module.exports = XHR;
 	"use strict";
 	// 初始化
 	var fn = $viewEdit.__proto__;
-	fn.editType = function(){
+	fn.editType = function() {
 		var $this = this;
 		return {
 			// 图片编辑
-			imgTpl : function(prentThis){
-				
-				var imglist = new Array();	
+			imgTpl: function(prentThis) {
+
+				var imglist = new Array();
 				var defhtmltext = $("<div></div>"),
 					defobj = new Array();
 
 				$.each($this.cacheList, function(index, val) {
-					if(this.key == $(prentThis).attr("*["+$this.config.el+"]")){
-						defhtmltext = $("<div>"+$(this).html()+"</div>");
+					if (this.key == $(prentThis).attr("*[" + $this.config.el + "]")) {
+						defhtmltext = $("<div>" + $(this).html() + "</div>");
 					}
 				});
 
 				$.each(defhtmltext.find("img"), function(index, val) {
 					// var minsrc = $(this).attr("src").match(/\@(.*)/) ? $(this).attr("src").match(/\@(.*)/)[0] : "";
 					var minsrc = $this.isOss($(this).attr("src"));
-					if($(this).attr("data-original")){
+					if ($(this).attr("data-original")) {
 						// var maxsrc = $(this).attr("data-original").match(/\@(.*)/) ? $(this).attr("data-original").match(/\@(.*)/)[0] : "";
 						var maxsrc = $this.isOss($(this).attr("data-original"));
-					}else{
+					} else {
 						var maxsrc = "";
 					}
-					
+
 					defobj.push({
-					  	"minsrc" : minsrc,
-					  	"maxsrc" : maxsrc
+						"minsrc": minsrc,
+						"maxsrc": maxsrc
 					});
 				});
 
 				$.each($(prentThis).find("img"), function(index) {
 					var src = $(this).attr("data-original") ? $(this).attr("data-original") : $(this).attr("src");
-						// src = src.match(/(.*)\@/) ?  src.match(/(.*)\@/)[1] : src ;
-						src = $this.isSrc(src);
+					// src = src.match(/(.*)\@/) ?  src.match(/(.*)\@/)[1] : src ;
+					src = $this.isSrc(src);
 					var checkbox = $(this).attr("data-original") ? 'checked="checked"' : "";
 					var display = $(this).attr("data-original") ? 'display:block' : "display:none";
 
 					var tplList = $this.template({
-						"index" : index,
-						"src" : src,
-						"checkbox":checkbox,
-						"display":display,
-						"defobj":defobj[index],
-						"alt":$(this).attr("alt")
-					},"img");
+						"index": index,
+						"src": src,
+						"checkbox": checkbox,
+						"display": display,
+						"defobj": defobj[index],
+						"alt": $(this).attr("alt")
+					}, "img");
 
 					imglist.push(tplList);
-				});		
+				});
 
 				$this.layer.open({
 					content: '<ul class="blockimglist"></ul>',
-					area:["1000px","600px"],
-					type:1,
-					btn: ['保存','取消'], //按钮
-					yes : function(index, layero){
+					area: ["1000px", "600px"],
+					type: 1,
+					btn: ['保存', '取消'], //按钮
+					yes: function(index, layero) {
 						var msgthis = true;
 						$.each($(".blockimglist li"), function(index, val) {
 							//$(prentThis).find("img:eq("+index+")").attr("src",$(this).find("input[name='urlsrc']").val());
 							var srcObject = {
-								urlsrc:$(this).find("input[name='urlsrc']"),
-								minsrc:$(this).find("input[name='urlmin']"),
-								maxsrc:$(this).find("input[name='urlmax']"),
+								urlsrc: $(this).find("input[name='urlsrc']"),
+								minsrc: $(this).find("input[name='urlmin']"),
+								maxsrc: $(this).find("input[name='urlmax']"),
 							};
-							if($(this).find("input[type='checkbox']").is(':checked')){
-								if((srcObject.minsrc.val()[0] != "@" || srcObject.maxsrc.val()[0] != "@") && (srcObject.minsrc.val()[0] != "?" || srcObject.maxsrc.val()[0] != "?") ) {
+							if ($(this).find("input[type='checkbox']").is(':checked')) {
+								if ((srcObject.minsrc.val()[0] != "@" || srcObject.maxsrc.val()[0] != "@") && (srcObject.minsrc.val()[0] != "?" || srcObject.maxsrc.val()[0] != "?")) {
 									$this.layer.msg("请参照“@250h_250w_1e_1c或?x-oss-process=image/resize,w_250,h_250”格式书写图片尺寸！");
 									msgthis = false;
 									return false;
 								}
-								$(prentThis).find("img:eq("+index+")").attr("data-original",srcObject.urlsrc.val()+srcObject.maxsrc.val());
-								$(prentThis).find("img:eq("+index+")").attr("minsrc",srcObject.urlsrc.val()+srcObject.minsrc.val());
-								$this.cacheListUp($(prentThis).attr("*["+$this.config.el+"]"),{"minsrc":srcObject.minsrc.val(),"maxsrc":srcObject.maxsrc.val()},srcObject.urlsrc.val(),index);
-								$(prentThis).find("img:eq("+index+")").attr("src",srcObject.urlsrc.val()+srcObject.maxsrc.val());
-							}else{
-								$(prentThis).find("img:eq("+index+")").removeAttr('data-original').removeAttr('minsrc').attr("src",srcObject.urlsrc.val());
+								$(prentThis).find("img:eq(" + index + ")").attr("data-original", srcObject.urlsrc.val() + srcObject.maxsrc.val());
+								$(prentThis).find("img:eq(" + index + ")").attr("minsrc", srcObject.urlsrc.val() + srcObject.minsrc.val());
+								$this.cacheListUp($(prentThis).attr("*[" + $this.config.el + "]"), {
+									"minsrc": srcObject.minsrc.val(),
+									"maxsrc": srcObject.maxsrc.val()
+								}, srcObject.urlsrc.val(), index);
+								$(prentThis).find("img:eq(" + index + ")").attr("src", srcObject.urlsrc.val() + srcObject.maxsrc.val());
+							} else {
+								$(prentThis).find("img:eq(" + index + ")").removeAttr('data-original').removeAttr('minsrc').attr("src", srcObject.urlsrc.val());
 							}
-							$(prentThis).find("img:eq("+index+")").attr("alt",$(this).find("textarea[name='alt']").val());
+							$(prentThis).find("img:eq(" + index + ")").attr("alt", $(this).find("textarea[name='alt']").val());
 						});
-						if(msgthis){
+						if (msgthis) {
 							$this.layer.msg('操作成功！');
 							$this.layer.close(index);
 						}
@@ -20137,21 +20140,21 @@ module.exports = XHR;
 				//var index = $this.layer.load(0, {shade: [0.1,'#fff'] });
 				// 载入webuploader
 				$(".blockimglist").append(imglist).find("input[type='file']");
-				$(".blockimglist input[name='checkbox']").change(function(){
-					if($(this).is(":checked")){
+				$(".blockimglist input[name='checkbox']").change(function() {
+					if ($(this).is(":checked")) {
 						$(this).parents("li").find(".divupimg").show();
-					}else{
+					} else {
 						$(this).parents("li").find(".divupimg").hide();
 					}
 				});
 				$.each($(".blockimglist").find("a"), function() {
-					$this.webUploader("#"+$(this).attr("id"));
+					$this.webUploader("#" + $(this).attr("id"));
 				});
-				
+
 			},
 
 			// 链接编辑
-			linkTpl : function(prentThis,event){
+			linkTpl: function(prentThis, event) {
 				var linklist = new Array();
 				$.each($(prentThis).find("a"), function(index) {
 					var src = $(this).attr("data-original") ? $(this).attr("data-original") : $(this).attr("src");
@@ -20160,37 +20163,41 @@ module.exports = XHR;
 					var soltop = $(document).scrollTop();
 
 					// 生成预览图
-					event.preventDefault();  
-                    html2canvas(this, {  
-	                    allowTaint: true,  
-	                    taintTest: false,  
-	                    onrendered: function(canvas) {  
-	                        canvas.id = "mycanvas";  
-	                        $(document).scrollTop(soltop);
-	                        document.getElementById('boxdivlist'+index).appendChild(canvas); 
-	                    }
-                	}); 
+					event.preventDefault();
+					html2canvas(this, {
+						allowTaint: true,
+						taintTest: false,
+						width: 180,
+      			height: 150,
+						onrendered: function(canvas) {
+							canvas.id = "mycanvas";
+							$(document).scrollTop(soltop);
+							document.getElementById('boxdivlist' + index).appendChild(canvas);
+						}
+					});
 
-					var tplList = '<li imglist = "'+index+'"><div>\
-						<p class="img" style=" height: 120px; line-height: 120px; font-size: 30px;" id="boxdivlist'+index+'" ><span>Link</span></p>\
-						<input type="text" name="href" placeholder="链接地址" value="'+$(this).attr("href")+'"  />\
-						<textarea placeholder="Title信息" class="text" name="title"  >'+title+'</textarea>\
-					</div></li>';
+					var tplList = $this.template({
+						"index": index,
+						"title": title,
+						"href": $(this).attr("href")
+					}, "link");
 					linklist.push(tplList);
-				});		
+				});
 
 				$this.layer.confirm('<ul class="blockimglist"></ul>', {
-					area:["1000px","600px"],
-					btn: ['保存','取消'] //按钮
-				}, function(index, layero){
+					area: ["1000px", "600px"],
+					btn: ['保存', '取消'] //按钮
+				}, function(index, layero) {
 					$.each($(".blockimglist li"), function(index, val) {
-						$(prentThis).find("a:eq("+index+")").attr("href",$(this).find("input[name='href']").val())
+						$(prentThis).find("a:eq(" + index + ")").attr("href", $(this).find("input[name='href']").val())
 							//.html($(this).find("div.text").html())
-							.attr("title",$(this).find("textarea[name='title']").val());
+							.attr("title", $(this).find("textarea[name='title']").val());
 					});
 					$this.layer.close(index);
-					$this.layer.msg('操作成功！', {icon: 1});
-				},function(){
+					$this.layer.msg('操作成功！', {
+						icon: 1
+					});
+				}, function() {
 
 				});
 				$(".blockimglist").append(linklist);
@@ -21540,10 +21547,23 @@ module.exports = XHR;
 
 	// 启动编辑
 	fn.elockOff = function() {
-		var $this = this;		
+		var $this = this;	
+
+		// 创建存储dom 
+		$.each(this.el(), function() {
+			var valData = {
+				"key" : $(this).attr($this.config.el),
+				"value" : $(this).html()
+			};
+			$this.cacheList.push(valData);
+			//$this.ergodicType(valData);
+		});
+
+		// 获取
 		$.each(this.cacheList, function(index, val) {
 			$this.ergodicType(this);			
 		});
+
 		$(".blockBottom").find("a").on("click",function(){
 				if($(this).text() == "保存"){
 					var index = $viewEdit.layer.load(0, {shade: [0.1,'#fff'] });
@@ -21631,10 +21651,40 @@ module.exports = XHR;
 					</div></li>';
 			break;
 
-			default:
-				;
+			case "link":
+				return '<li imglist = "'+data.index+'"><div>\
+						<p class="img" id="boxdivlist'+data.index+'" ><span style="font-size: 30px;"  >Link</span></p>\
+						<input type="text" name="href" placeholder="链接地址" value="'+data.href+'"  />\
+						<textarea placeholder="Title信息" class="text" name="title"  >'+data.title+'</textarea>\
+					</div></li>';
+			break;
+			default:;
 		}
 		return this;
+	};
+	/*
+		*	@设置延迟加载修改初始数据
+		*	@key =>>$t  @data =>> 小图于大图尺寸  @ulr  =>> 更新图片地址  @index =>> 图片的index
+		*/
+	fn.cacheListUp = function($key,$data,$url,$index) {
+		var $this = this;
+		$.each(this.cacheList, function(index, val) {
+			if($key == this.key){
+				var _this = $("<div>"+this.value+"</div>");
+				$.each(_this.find("img"), function(index, val) {
+					if(index == $index){
+						if($data.minsrc != ""){
+							
+							var host = $this.isSrc($url) == "" ? $url : $this.isSrc($url);			
+							$(this).attr("src",host + $data.minsrc);
+						}
+						$(this).attr("data-original",host + $data.maxsrc)
+					}
+				});
+
+				this.value = _this.html();
+			}
+		});
 	};
 	// 查找变化后的元素
 	fn.contrastList = function() {
@@ -21649,9 +21699,7 @@ module.exports = XHR;
 						$(this).attr("src",$(this).attr("minsrc")).removeAttr('minsrc');
 					}else{							
 						var url = $("<div>"+$this.cacheList[index1].value+"</div>").find("img:eq("+index+")").attr("src");
-						//var min = url.match(/\@(.*)/) ? url.match(/\@(.*)/)[0] : "";
 						var min = $this.isOss(url);
-						//var tpurl = $(this).attr("data-original").match(/(.*)\@/) ?  $(this).attr("data-original").match(/(.*)\@/)[1] : $(this).attr("data-original") ;
 						var tpurl = $this.isSrc($(this).attr("data-original")) ;
 						$(this).attr("src",tpurl+min).removeAttr('minsrc')
 					}
@@ -21803,6 +21851,7 @@ module.exports = XHR;
 		});
 		return this;
 	};
+
 })(window, $, VE);!(function(win, $, $viewEdit) {
 	"use strict";
 	// 初始化
