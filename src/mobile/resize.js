@@ -44,14 +44,13 @@
 	// 启动编辑
 	fn.elockOff = function() {
 		var $this = this;
-
-
+		
 		// 获取
 		$.each(this.el(), function(index, val) {
 			$this.ergodicType(this);
 		});
 
-		$(".blockBottom").find("a").on("click", function() {
+		$(".blockBottom").find("a").unbind('click').on("click", function() {
 			if ($(this).text() == "保存") {
 				var index = $viewEdit.layer.load(0, {
 					shade: [0.1, '#fff']
@@ -86,7 +85,7 @@
 			}
 		});
 
-		this.el().find("a").click(function() {
+		this.el().find("a").unbind('click').click(function() {
 			return false;
 		});
 
@@ -114,7 +113,7 @@
 				// clearInterval(set2);
 				$this.el().find("*").removeAttr('contentEditable');
 			});
-		}).hover(function() {
+		}).unbind('hover').hover(function() {
 			$this.curve($(this).parents("*[" + $this.config.el + "]"), $(this).parents("*[" + $this.config.el + "]"));
 		}, function() {
 			$(".blockbk").hide();

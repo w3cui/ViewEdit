@@ -164,6 +164,7 @@
 				$(_this).before($(_this).clone());
 				$(_this).removeAttr($this.config.addTemplate);
 				$this.curve($(_this), $(_this),true);
+				$this.elockOff();
 			}
 
 		};
