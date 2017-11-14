@@ -7,7 +7,7 @@
 		
 
 		$("body").append(this.template({
-			addBtn: "<a>新增</a>"
+			addBtn: $this.config.btn
 		}, "main"));
 
 		if (this.cacheList().length == 0) return false;
@@ -44,7 +44,7 @@
 	// 启动编辑
 	fn.elockOff = function() {
 		var $this = this;
-		
+
 		// 获取
 		$.each(this.el(), function(index, val) {
 			$this.ergodicType(this);

@@ -6,7 +6,7 @@
 		switch (type) {
 
 			case "main":
-				return '<div class="blockBottom">"当前可编辑区域<span >' + (this.cacheList().length || 0) + '</span>个,是否修改？"</span><a>保存</a><a href="">取消</a>' + data.addBtn + '</div>';
+				return '<div class="blockBottom">"当前可编辑区域<span >' + (this.cacheList().length || 0) + '</span>个,是否修改？"</span><a>保存</a>' + data.addBtn + '</div>';
 				break;
 
 			case "block":

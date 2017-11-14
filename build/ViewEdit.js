@@ -19870,6 +19870,8 @@ module.exports = XHR;
 		addTemplate:"ve-add-tpl",
 		// 提交地址
 		serverUrl: "/api/page/savePage",
+		// 扩展按钮
+		btn: "<a>退出</a>",
 		// 获取资源项目地址
 		staticUrl: $("script").last().attr("src").match(/(http|https):\/\/([^\/]+)\//)[0],
 		// 保存数据附加参数
@@ -20151,6 +20153,7 @@ module.exports = XHR;
 
 				$this.layer.confirm('<ul class="blockimglist"></ul>', {
 					area: ["1000px", "600px"],
+					type: 1,
 					btn: ['保存', '取消'] //按钮
 				}, function(index, layero) {
 					$.each($(".blockimglist li"), function(index, val) {
@@ -21512,7 +21515,7 @@ module.exports = XHR;
 		
 
 		$("body").append(this.template({
-			addBtn: "<a>新增</a>"
+			addBtn: $this.config.btn
 		}, "main"));
 
 		if (this.cacheList().length == 0) return false;
@@ -21549,7 +21552,7 @@ module.exports = XHR;
 	// 启动编辑
 	fn.elockOff = function() {
 		var $this = this;
-		
+
 		// 获取
 		$.each(this.el(), function(index, val) {
 			$this.ergodicType(this);
@@ -21638,7 +21641,7 @@ module.exports = XHR;
 		switch (type) {
 
 			case "main":
-				return '<div class="blockBottom">"当前可编辑区域<span >' + (this.cacheList().length || 0) + '</span>个,是否修改？"</span><a>保存</a><a href="">取消</a>' + data.addBtn + '</div>';
+				return '<div class="blockBottom">"当前可编辑区域<span >' + (this.cacheList().length || 0) + '</span>个,是否修改？"</span><a>保存</a>' + data.addBtn + '</div>';
 				break;
 
 			case "block":

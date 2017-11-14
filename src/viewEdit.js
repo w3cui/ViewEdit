@@ -10,6 +10,8 @@
 		addTemplate:"ve-add-tpl",
 		// 提交地址
 		serverUrl: "/api/page/savePage",
+		// 扩展按钮
+		btn: "<a>退出</a>",
 		// 获取资源项目地址
 		staticUrl: $("script").last().attr("src").match(/(http|https):\/\/([^\/]+)\//)[0],
 		// 保存数据附加参数

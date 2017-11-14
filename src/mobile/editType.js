@@ -142,6 +142,7 @@
 
 				$this.layer.confirm('<ul class="blockimglist"></ul>', {
 					area: ["1000px", "600px"],
+					type: 1,
 					btn: ['保存', '取消'] //按钮
 				}, function(index, layero) {
 					$.each($(".blockimglist li"), function(index, val) {
