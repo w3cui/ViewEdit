@@ -27,9 +27,7 @@ gulp local 开发预览
 
 ## 功能展示
 
-![Image text](http://www.w3cui.com/wp-content/uploads/2014/12/333.gif)
-
-**ViewEdit**
+![Image text](http://www.w3cui.com/wp-content/uploads/2014/12/ve.gif)
 
 使用：
 
