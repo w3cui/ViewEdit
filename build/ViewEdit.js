@@ -19864,7 +19864,10 @@ module.exports = XHR;
 	  	构建基础配置
 	  */
 	var config = {
-		el: "page_key",
+		// 绑定编辑模块KEY
+		el: "ve-key",
+		// 标签内部新增key
+		addTemplate:"ve-add-tpl",
 		// 提交地址
 		serverUrl: "/api/page/savePage",
 		// 获取资源项目地址
@@ -19905,9 +19908,9 @@ module.exports = XHR;
 
 	var viewEdit = function() {
 		this.v = '1.0.0';
-		
+
 		// 查找绑定可编辑的元素
-		this.el =function ()  {
+		this.el = function() {
 			return $("*[" + this.config.el + "]");
 		};
 
@@ -19918,53 +19921,43 @@ module.exports = XHR;
 		this.cacheList = new Array();
 
 		// 初始化
-		this.init = function (api)  {
+		this.init = function(api) {
 			var $this = this;
-			this.config = (function(api, config) {
-				var copyConfig = $this.api.copy(config);			
-				$.extend(copyConfig, api);
-
-				if (api.upload) {
-					var upload = $this.api.copy(config.upload);
-					$.extend(upload, api.upload);
-					copyConfig.upload = upload;
-				}
-				return copyConfig;
-			})(api, config);
-			// 统计可编辑区域
-			//this.cacheList = this.el();
+			this.config = $.extend(true,$this.api.copy(config),api);
 			// 启动插件
 			this.resize();
 			return this;
 		}
-		
+
 	};
-	
+
 	var fn = viewEdit.prototype;
 
 	// 判断取出图片地址 
-	fn.isSrc =function ($src)  {
+	fn.isSrc = function($src) {
 		var retSrc = $src.match(/(.*)\@/) ? $src.match(/(.*)\@/)[1] :
 			$src.match(/(.*)\?/) ? $src.match(/(.*)\?/)[1] : $src;
 		return retSrc;
 	};
 
 	// 添加时间间隔
-	fn.BlockDate = function ()  {
+	fn.BlockDate = function() {
 		var d = new Date;
 		return d.getTime();
 	};
+	
 	// 判断图片截取规则
-	fn.isOss =function ($src)  {
+	fn.isOss = function($src) {
 		var retSrc = $src.match(/\@(.*)/) ? $src.match(/\@(.*)/)[0] :
 			$src.match(/\?(.*)/) ? $src.match(/\?(.*)/)[0] : "";
 		return retSrc;
 	};
 
 	//异常提示
-	var error =function (msg)  {
+	var error = function(msg) {
 		win.console && console.error && console.error('viewEidt hint: ' + msg);
-	}; 
+	};
+
 	window.VE = new viewEdit();
 })(window, $);!(function(win, $, $viewEdit) {
 	"use strict";
@@ -20000,51 +19993,7 @@ module.exports = XHR;
 					newobj[attr] = $viewEdit.api.copy(obj[attr]);
 				}
 				return newobj;
-			},
-
-			loadJS: function(url, callback) {
-				var $this = this;
-				switch (typeof url) {
-					case "object":
-						var urlLength = url.length,
-							defLength = 1;
-						$.each(url, function(i, url) {
-							var head = document.getElementsByTagName("head")[0];
-							var script = document.createElement("script");
-							script.src = url + "?" + $this.v;
-							var done = false;
-							script.onload = script.onreadystatechange = function() {
-								if (!done && (!this.readyState || this.readyState == "loaded" || this.readyState == "complete")) {
-									done = true;
-									if (defLength >= urlLength) {
-										return callback();
-									}
-									defLength++;
-									script.onload = script.onreadystatechange = null;
-									head.removeChild(script);
-								}
-							};
-							head.appendChild(script);
-						});
-						break;
-					default:
-						var head = document.getElementsByTagName("head")[0];
-						var script = document.createElement("script");
-						script.src = url + "?" + $this.v;
-						var done = false;
-						script.onload = script.onreadystatechange = function() {
-							if (!done && (!this.readyState || this.readyState == "loaded" || this.readyState == "complete")) {
-								done = true;
-								callback();
-								script.onload = script.onreadystatechange = null;
-								head.removeChild(script);
-							}
-						};
-						head.appendChild(script);
-
-				}
 			}
-
 		};
 	})()
 })(window, $, window.VE);!(function(win, $, $viewEdit) {
@@ -20054,6 +20003,7 @@ module.exports = XHR;
 	fn.editType = function() {
 		var $this = this;
 		return {
+
 			// 图片编辑
 			imgTpl: function(prentThis) {
 
@@ -20174,7 +20124,7 @@ module.exports = XHR;
 						width: 180,
       			height: 150,
 						onrendered: function(canvas) {
-							canvas.id = "mycanvas";
+							canvas.id = "mycanvas" + index;
 							$(document).scrollTop(soltop);
 							document.getElementById('boxdivlist' + index).appendChild(canvas);
 						}
@@ -20205,6 +20155,13 @@ module.exports = XHR;
 
 				});
 				$(".blockimglist").append(linklist);
+			},
+
+			// 自定义新增模块
+			addTpl:function(prentThis,_this){
+				$(_this).before($(_this).clone());
+				$(_this).removeAttr($this.config.addTemplate);
+				$this.curve($(_this), $(_this));
 			}
 
 		};
@@ -21678,50 +21635,51 @@ module.exports = XHR;
 
 			case "main":
 				return '<div class="blockBottom">"当前可编辑区域<span >' + (this.cacheList.length || 0) + '</span>个,是否修改？"</span><a>保存</a><a href="">取消</a>' + data.addBtn + '</div>';
-			break;
+				break;
 
 			case "block":
-				return '<div class="block_l blockbk"></div><div class="block_r blockbk"></div><div class="block_t blockbk"></div><div class="block_b blockbk"></div>'; 
-			break;
+				return '<div class="block_l blockbk"></div><div class="block_r blockbk"></div><div class="block_t blockbk"></div><div class="block_b blockbk"></div>';
+				break;
 
 			case "img":
-				return '<li imglist = "'+data.index+'"><div>\
-						<p class="img"><img src="'+data.src+'" /><a id="file_'+data.index+'" >修改</a></p>\
-						<input type="hidden" class="fl" value="'+data.src+'" name="urlsrc" />\
-						<label><span><input type="checkbox" name="checkbox" '+data.checkbox+' />是否开启预加载？</span></label>\
-						<div class="divupimg" style = "'+data.display+'"><input type="text" placeholder="默认图尺寸" name="urlmin" value="'+data.defobj.minsrc+'" /><input type="text" placeholder="高清图尺寸"  name="urlmax"  value="'+data.defobj.maxsrc+'" /></div>\
-						<textarea placeholder="图片alt" class="text" name="alt"  >'+data.alt+'</textarea>\
+				return '<li imglist = "' + data.index + '"><div>\
+						<p class="img"><img src="' + data.src + '" /><a id="file_' + data.index + '" >修改</a></p>\
+						<input type="hidden" class="fl" value="' + data.src + '" name="urlsrc" />\
+						<label><span><input type="checkbox" name="checkbox" ' + data.checkbox + ' />是否开启预加载？</span></label>\
+						<div class="divupimg" style = "' + data.display + '"><input type="text" placeholder="默认图尺寸" name="urlmin" value="' + data.defobj.minsrc + '" /><input type="text" placeholder="高清图尺寸"  name="urlmax"  value="' + data.defobj.maxsrc + '" /></div>\
+						<textarea placeholder="图片alt" class="text" name="alt"  >' + data.alt + '</textarea>\
 					</div></li>';
-			break;
+				break;
 
 			case "link":
-				return '<li imglist = "'+data.index+'"><div>\
-						<p class="img" id="boxdivlist'+data.index+'" ><span style="font-size: 30px;"  >Link</span></p>\
-						<input type="text" name="href" placeholder="链接地址" value="'+data.href+'"  />\
-						<textarea placeholder="Title信息" class="text" name="title"  >'+data.title+'</textarea>\
+				return '<li imglist = "' + data.index + '"><div>\
+						<p class="img" id="boxdivlist' + data.index + '" ><span style="font-size: 30px;"  >Link</span></p>\
+						<input type="text" name="href" placeholder="链接地址" value="' + data.href + '"  />\
+						<textarea placeholder="Title信息" class="text" name="title"  >' + data.title + '</textarea>\
 					</div></li>';
-			break;
-			default:;
+				break;
+			default:
+				;
 		}
 		return this;
 	};
 	/*
-		*	@设置延迟加载修改初始数据
-		*	@key =>>$t  @data =>> 小图于大图尺寸  @ulr  =>> 更新图片地址  @index =>> 图片的index
-		*/
-	fn.cacheListUp = function($key,$data,$url,$index) {
+	 *	@设置延迟加载修改初始数据
+	 *	@key =>>$t  @data =>> 小图于大图尺寸  @ulr  =>> 更新图片地址  @index =>> 图片的index
+	 */
+	fn.cacheListUp = function($key, $data, $url, $index) {
 		var $this = this;
 		$.each(this.cacheList, function(index, val) {
-			if($key == this.key){
-				var _this = $("<div>"+this.value+"</div>");
+			if ($key == this.key) {
+				var _this = $("<div>" + this.value + "</div>");
 				$.each(_this.find("img"), function(index, val) {
-					if(index == $index){
-						if($data.minsrc != ""){
-							
-							var host = $this.isSrc($url) == "" ? $url : $this.isSrc($url);			
-							$(this).attr("src",host + $data.minsrc);
+					if (index == $index) {
+						if ($data.minsrc != "") {
+
+							var host = $this.isSrc($url) == "" ? $url : $this.isSrc($url);
+							$(this).attr("src", host + $data.minsrc);
 						}
-						$(this).attr("data-original",host + $data.maxsrc)
+						$(this).attr("data-original", host + $data.maxsrc)
 					}
 				});
 
@@ -21734,25 +21692,25 @@ module.exports = XHR;
 		var $this = this;
 		var $data = new Array();
 		$.each(this.el(), function(index1) {
-			var htmltext = $("<div>"+$(this).html().replace(/[\t\r\n]*/g,"").replace(/>[ ]*/g,">").replace(/[ ]*</g,"<")+"</div>");
+			var htmltext = $("<div>" + $(this).html().replace(/[\t\r\n]*/g, "").replace(/>[ ]*/g, ">").replace(/[ ]*</g, "<") + "</div>");
 			$.each(htmltext.find("img"), function(index, val) {
 				// 注意此处的修改 容易造成全部数据错乱 
-				if($(this).attr("data-original")){
-					if($(this).attr("minsrc")){
-						$(this).attr("src",$(this).attr("minsrc")).removeAttr('minsrc');
-					}else{							
-						var url = $("<div>"+$this.cacheList[index1].value+"</div>").find("img:eq("+index+")").attr("src");
+				if ($(this).attr("data-original")) {
+					if ($(this).attr("minsrc")) {
+						$(this).attr("src", $(this).attr("minsrc")).removeAttr('minsrc');
+					} else {
+						var url = $("<div>" + $this.cacheList[index1].value + "</div>").find("img:eq(" + index + ")").attr("src");
 						var min = $this.isOss(url);
-						var tpurl = $this.isSrc($(this).attr("data-original")) ;
-						$(this).attr("src",tpurl+min).removeAttr('minsrc')
+						var tpurl = $this.isSrc($(this).attr("data-original"));
+						$(this).attr("src", tpurl + min).removeAttr('minsrc')
 					}
-					
+
 				}
 			});
 
 			var valData = {
-				"key" : $(this).attr($this.config.el),
-				"value" :htmltext.html().replace(/[\t\r\n]*/g,"").replace(/>[ ]*/g,">").replace(/[ ]*</g,"<"),
+				"key": $(this).attr($this.config.el),
+				"value": htmltext.html().replace(/[\t\r\n]*/g, "").replace(/>[ ]*/g, ">").replace(/[ ]*</g, "<"),
 			};
 			$data.push(valData);
 
@@ -21760,63 +21718,74 @@ module.exports = XHR;
 		return $data;
 	};
 	// 绘制编辑区域
-	fn.curve = function(_this,prentThis) {
+	fn.curve = function(_this, prentThis) {
 		$(".blockbk").hide();
 		var curveobj = this.ergodic().calculationErgodic(_this);
-		if($(".blockbk").length == 0){
-			$("body").append(this.template({},"block"));
+
+		if ($(".blockbk").length == 0) {
+			$("body").append(this.template({}, "block"));
 			draw();
-		}else{
+		} else {
 			draw();
 			$(".blockbk").show();
 		}
-		function draw(){
+
+		function draw() {
 			$(".block_l").css({
-				"height":curveobj.height,
-				"left":curveobj.left,
-				"top":curveobj.top
+				"height": curveobj.height,
+				"left": curveobj.left,
+				"top": curveobj.top
 			});
 			$(".block_t").css({
-				"width":curveobj.width,
-				"left":curveobj.left,
-				"top":curveobj.top
+				"width": curveobj.width,
+				"left": curveobj.left,
+				"top": curveobj.top
 			});
 			$(".block_r").css({
-				"height":curveobj.height,
-				"left":curveobj.left + curveobj.width,
-				"top":curveobj.top
+				"height": curveobj.height,
+				"left": curveobj.left + curveobj.width,
+				"top": curveobj.top
 			});
 			$(".block_b").css({
-				"width":curveobj.width,
-				"left":curveobj.left,
-				"top":curveobj.top + curveobj.height
+				"width": curveobj.width,
+				"left": curveobj.left,
+				"top": curveobj.top + curveobj.height
 			});
 		}
-		
+
 	};
 
 	// 锁定可编辑的区域块
 	fn.BlockMoveHtml = function(id, style, type) { //'{width:;height:;top:;left:;}'
 		var button = ""
-		button += type == "IMG" ? '<a href="javascript:;" class="img" data-block="' + id + '" style=" margin-left:2px; padding:0px 5px; display: inline-block; width:50px; height:25px; line-height:25px;position: relative; top:-25px;right:-1px;  text-align: center; color: #fff;background:#4da1da;">编辑图片</a>\
-		<a href="javascript:;" data-block="' + id + '" class="link" style="display: none; margin-left:2px; padding:0px 5px;width:50px; height:25px; line-height:25px;position: relative; top:-25px;right:-1px;  text-align: center; color: #fff;background:#4da1da;">编辑链接</a>' : '';
-		button += type == "A" ? '<a href="javascript:;" class="img" data-block="' + id + '" style=" margin-left:2px;display: none; padding:0px 5px; width:50px; height:25px; line-height:25px;position: relative; top:-25px;right:-1px;  text-align: center; color: #fff;background:#4da1da;">编辑图片</a>\
-		<a href="javascript:;" data-block="' + id + '" class="link"  style=" margin-left:2px;display: inline-block; width:50px; height:25px; padding:0px 5px; line-height:25px;position: relative; top:-25px;right:-1px;  text-align: center; color: #fff;background:#4da1da;">编辑链接</a>' : '';
+		console.log(type);
+		// button += type == "IMG" ? '<a href="javascript:;" class="img" data-block="' + id + '" >编辑图片</a>\
+		// <a href="javascript:;" data-block="' + id + '" class="link" >编辑链接</a>' : '';
 
+		// button += type == "A" ? '<a href="javascript:;" class="img" data-block="' + id + '" >编辑图片</a>\
+		// <a href="javascript:;" data-block="' + id + '" class="link" >编辑链接</a>' : '';
+
+		button += '<a href="javascript:;" class="img" data-block="' + id + '" >编辑图片</a>'+
+		'<a href="javascript:;" data-block="' + id + '" class="link" >编辑链接</a>' +
+		'<a href="javascript:;" data-block="' + id + '" class="addtpl" >新增</a>' ;
+		var imgButton = "";
 		if ($('#Blick' + id).length == 0) {
-			return '<div class="Blickcookroom" id="Blick' + id + '" style="' + style + 'position: absolute; font-size:12px; z-index:900;  background:rgba(0,0,0,0.02); text-align: center;">\
+			imgButton = '<div class="Blickcookroom" id="Blick' + id + '" style="' + style + 'position: absolute; font-size:12px; z-index:900;  background:rgba(0,0,0,0.02); text-align: center;">\
 				' + button + '\
 				</div>';
-			//<div class="Blickbg'+id+'" style="position: fixed; z-index:890;left:0px; top:0px; width:100%; height:100%;"></div>';
+			$("body").append(imgButton);
 		} else {
-			$('#Blick' + id).attr("style", style + 'position: absolute; z-index:900;background:rgba(0,0,0,0.02);text-align: center; font-size:12px;');
-			if (type == "IMG") {
-				$('#Blick' + id).find(".img").css("display", "inline-block");
-			}
-			if (type == "A") {
-				$('#Blick' + id).find(".link").css("display", "inline-block");
-			}
-			return false;
+			$('#Blick' + id).attr("style", style + '');
+		}
+
+		if (type == "IMG") {
+			$('#Blick' + id).find(".img").css("display", "inline-block");
+		}
+		if (type == "A") {
+			$('#Blick' + id).find(".link").css("display", "inline-block");
+		}
+		if (type == "tpl") {
+			$('#Blick' + id).find(".addtpl").css("display", "inline-block");
 		}
 
 	}
@@ -21827,7 +21796,6 @@ module.exports = XHR;
 		ergodic.linkErgodic();  链接处理
 		ergodic.textErgodic();  其他处理
 		ergodic.calculationErgodic() 计算高宽坐标
-
 	*	ergodicType();	判断可编辑区域内所有编辑对象的类型并且绑定事件
 	*/
 
@@ -21838,8 +21806,8 @@ module.exports = XHR;
 		return {
 			imgErgodic: function(_this, prentThis) {
 				var object = this.calculationErgodic(prentThis);
-				var imgButton = $this.BlockMoveHtml($(prentThis).attr($this.config.el), "width:" + object.width + "px;height:" + 0 + "px;top:" + object.top + "px;left:" + object.left + "px;", "IMG");
-				$("body").append(imgButton);
+				$this.BlockMoveHtml($(prentThis).attr($this.config.el), "width:" + object.width + "px;height:" + 0 + "px;top:" + object.top + "px;left:" + object.left + "px;", "IMG");
+				
 				if ($(prentThis).is(':hidden')) {
 					$("#Blick" + $(prentThis).attr($this.config.el)).hide();
 				} else {
@@ -21851,8 +21819,8 @@ module.exports = XHR;
 			},
 			linkErgodic: function(_this, prentThis) {
 				var object = this.calculationErgodic(prentThis);
-				var imgButton = $this.BlockMoveHtml($(prentThis).attr($this.config.el), "width:" + object.width + "px;height:" + 0 + "px;top:" + object.top + "px;left:" + object.left + "px;", "A");
-				$("body").append(imgButton);
+				$this.BlockMoveHtml($(prentThis).attr($this.config.el), "width:" + object.width + "px;height:" + 0 + "px;top:" + object.top + "px;left:" + object.left + "px;", "A");
+				
 				if ($(prentThis).is(':hidden')) {
 					$("#Blick" + $(prentThis).attr($this.config.el)).hide();
 				} else {
@@ -21863,12 +21831,30 @@ module.exports = XHR;
 				});
 			},
 			textErgodic: function() {},
+
+			// 新增加模块
+			addTplErgodic : function(_this, prentThis){
+				var object = this.calculationErgodic(_this);
+				$this.BlockMoveHtml($(prentThis).attr($this.config.el), "width:" + object.width + "px;height:" + 0 + "px;top:" + object.top + "px;left:" + object.left + "px;", "tpl");
+				if ($(prentThis).is(':hidden')) {
+					$("#Blick" + $(prentThis).attr($this.config.el)).hide();
+				} else {
+					$("#Blick" + $(prentThis).attr($this.config.el)).show();
+				}
+				$("#Blick" + $(prentThis).attr($this.config.el)).find(".addtpl").unbind('click').click(function() {
+					$editType.addTpl(prentThis,_this);
+				}).unbind('hover').hover(function(event) {
+					$this.curve($(_this), $(_this));
+				},function(){
+					$(".blockbk").hide();
+				});
+			},
 			calculationErgodic: function(_this) {
 				return {
-					width: $(_this).width() + parseInt($(_this).css('padding-right')) + parseInt($(_this).css('padding-left')) + (parseInt($('div').css('borderTopWidth')) || 0 ) * 2,
-					height: $(_this).height() + parseInt($(_this).css('padding-top')) + parseInt($(_this).css('padding-bottom')) + (parseInt($('div').css('borderTopWidth')) || 0 ) * 2,
-					top: $(_this).offset().top - (parseInt($('div').css('borderTopWidth')) || 0 ) * 2,
-					left: $(_this).offset().left - (parseInt($('div').css('borderTopWidth')) || 0 ) * 2
+					width: $(_this).width() + parseInt($(_this).css('padding-right')) + parseInt($(_this).css('padding-left')) + (parseInt($('div').css('borderTopWidth')) || 0) * 2,
+					height: $(_this).height() + parseInt($(_this).css('padding-top')) + parseInt($(_this).css('padding-bottom')) + (parseInt($('div').css('borderTopWidth')) || 0) * 2,
+					top: $(_this).offset().top - (parseInt($('div').css('borderTopWidth')) || 0) * 2,
+					left: $(_this).offset().left - (parseInt($('div').css('borderTopWidth')) || 0) * 2
 				};
 			}
 		};
@@ -21878,8 +21864,10 @@ module.exports = XHR;
 	fn.ergodicType = function(_this) {
 		var $this = this,
 			$ergodicType = this.ergodic();
-
 		$.each($(_this).find("*"), function() {
+			if(typeof $(this).attr($this.config.addTemplate) != "undefined"){
+				$ergodicType.addTplErgodic(this, _this);
+			}
 			switch (this.tagName) {
 				case "IMG": //图片编辑
 					$ergodicType.imgErgodic(this, _this);

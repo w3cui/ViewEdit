@@ -5,6 +5,7 @@
 	fn.editType = function() {
 		var $this = this;
 		return {
+
 			// 图片编辑
 			imgTpl: function(prentThis) {
 
@@ -125,7 +126,7 @@
 						width: 180,
       			height: 150,
 						onrendered: function(canvas) {
-							canvas.id = "mycanvas";
+							canvas.id = "mycanvas" + index;
 							$(document).scrollTop(soltop);
 							document.getElementById('boxdivlist' + index).appendChild(canvas);
 						}
@@ -156,6 +157,13 @@
 
 				});
 				$(".blockimglist").append(linklist);
+			},
+
+			// 自定义新增模块
+			addTpl:function(prentThis,_this){
+				$(_this).before($(_this).clone());
+				$(_this).removeAttr($this.config.addTemplate);
+				$this.curve($(_this), $(_this));
 			}
 
 		};

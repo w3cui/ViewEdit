@@ -4,7 +4,10 @@
 	  	构建基础配置
 	  */
 	var config = {
-		el: "page_key",
+		// 绑定编辑模块KEY
+		el: "ve-key",
+		// 标签内部新增key
+		addTemplate:"ve-add-tpl",
 		// 提交地址
 		serverUrl: "/api/page/savePage",
 		// 获取资源项目地址
@@ -45,9 +48,9 @@
 
 	var viewEdit = function() {
 		this.v = '1.0.0';
-		
+
 		// 查找绑定可编辑的元素
-		this.el =function ()  {
+		this.el = function() {
 			return $("*[" + this.config.el + "]");
 		};
 
@@ -58,52 +61,42 @@
 		this.cacheList = new Array();
 
 		// 初始化
-		this.init = function (api)  {
+		this.init = function(api) {
 			var $this = this;
-			this.config = (function(api, config) {
-				var copyConfig = $this.api.copy(config);			
-				$.extend(copyConfig, api);
-
-				if (api.upload) {
-					var upload = $this.api.copy(config.upload);
-					$.extend(upload, api.upload);
-					copyConfig.upload = upload;
-				}
-				return copyConfig;
-			})(api, config);
-			// 统计可编辑区域
-			//this.cacheList = this.el();
+			this.config = $.extend(true,$this.api.copy(config),api);
 			// 启动插件
 			this.resize();
 			return this;
 		}
-		
+
 	};
-	
+
 	var fn = viewEdit.prototype;
 
 	// 判断取出图片地址 
-	fn.isSrc =function ($src)  {
+	fn.isSrc = function($src) {
 		var retSrc = $src.match(/(.*)\@/) ? $src.match(/(.*)\@/)[1] :
 			$src.match(/(.*)\?/) ? $src.match(/(.*)\?/)[1] : $src;
 		return retSrc;
 	};
 
 	// 添加时间间隔
-	fn.BlockDate = function ()  {
+	fn.BlockDate = function() {
 		var d = new Date;
 		return d.getTime();
 	};
+	
 	// 判断图片截取规则
-	fn.isOss =function ($src)  {
+	fn.isOss = function($src) {
 		var retSrc = $src.match(/\@(.*)/) ? $src.match(/\@(.*)/)[0] :
 			$src.match(/\?(.*)/) ? $src.match(/\?(.*)/)[0] : "";
 		return retSrc;
 	};
 
 	//异常提示
-	var error =function (msg)  {
+	var error = function(msg) {
 		win.console && console.error && console.error('viewEidt hint: ' + msg);
-	}; 
+	};
+
 	window.VE = new viewEdit();
 })(window, $);

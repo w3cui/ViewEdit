@@ -32,51 +32,7 @@
 					newobj[attr] = $viewEdit.api.copy(obj[attr]);
 				}
 				return newobj;
-			},
-
-			loadJS: function(url, callback) {
-				var $this = this;
-				switch (typeof url) {
-					case "object":
-						var urlLength = url.length,
-							defLength = 1;
-						$.each(url, function(i, url) {
-							var head = document.getElementsByTagName("head")[0];
-							var script = document.createElement("script");
-							script.src = url + "?" + $this.v;
-							var done = false;
-							script.onload = script.onreadystatechange = function() {
-								if (!done && (!this.readyState || this.readyState == "loaded" || this.readyState == "complete")) {
-									done = true;
-									if (defLength >= urlLength) {
-										return callback();
-									}
-									defLength++;
-									script.onload = script.onreadystatechange = null;
-									head.removeChild(script);
-								}
-							};
-							head.appendChild(script);
-						});
-						break;
-					default:
-						var head = document.getElementsByTagName("head")[0];
-						var script = document.createElement("script");
-						script.src = url + "?" + $this.v;
-						var done = false;
-						script.onload = script.onreadystatechange = function() {
-							if (!done && (!this.readyState || this.readyState == "loaded" || this.readyState == "complete")) {
-								done = true;
-								callback();
-								script.onload = script.onreadystatechange = null;
-								head.removeChild(script);
-							}
-						};
-						head.appendChild(script);
-
-				}
 			}
-
 		};
 	})()
 })(window, $, window.VE);
