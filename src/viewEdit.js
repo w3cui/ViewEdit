@@ -58,7 +58,18 @@
 		this.config = config;
 
 		// 默认数据缓存队列
-		this.cacheList = new Array();
+		this.cacheList = function(){
+			var cacheList = [];
+			var $this = this;
+			$.each(this.el(), function() {
+				var valData = {
+					"key": $(this).attr($this.config.el),
+					"value": $(this).html()
+				};
+				cacheList.push(valData);
+			});
+			return cacheList;
+		};
 
 		// 初始化
 		this.init = function(api) {
@@ -85,7 +96,7 @@
 		var d = new Date;
 		return d.getTime();
 	};
-	
+
 	// 判断图片截取规则
 	fn.isOss = function($src) {
 		var retSrc = $src.match(/\@(.*)/) ? $src.match(/\@(.*)/)[0] :

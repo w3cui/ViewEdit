@@ -13,7 +13,7 @@
 				var defhtmltext = $("<div></div>"),
 					defobj = new Array();
 
-				$.each($this.cacheList, function(index, val) {
+				$.each($this.cacheList(), function(index, val) {
 					if (this.key == $(prentThis).attr($this.config.el)) {
 						defhtmltext = $("<div>" + this.value + "</div>");
 					}
@@ -163,7 +163,7 @@
 			addTpl:function(prentThis,_this){
 				$(_this).before($(_this).clone());
 				$(_this).removeAttr($this.config.addTemplate);
-				$this.curve($(_this), $(_this));
+				$this.curve($(_this), $(_this),true);
 			}
 
 		};

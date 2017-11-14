@@ -19,9 +19,10 @@
 .blockBottom{ position: fixed; bottom: 0px; left: 0px; width: 100%; z-index: 9999; background: #fff; box-shadow: 0px -2px 3px #ccc; padding: 10px 0; text-align: center; }
 .blockBottom a{ display: inline-block; background: #4da1da; color: #fff; font-size: 12px; margin: 0px 5px; padding: 5px 20px; cursor:pointer; }
 .blockBottom span{ color: #ff4e00; }
-.block_t,.block_r,.block_b,.block_l{width:1px;height:1px;overflow: hidden; position:absolute; z-index:890; left:0; top:0;}
+.block_t,.block_r,.block_b,.block_l,.block_main{width:1px;height:1px;overflow: hidden; position:absolute; z-index:890; left:0; top:0;}
 .block_t,.block_b{background:url(data:image/gif;base64,R0lGODlhBgABAKEAAP///wAAADY2Nv///yH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQACgD/ACwAAAAABgABAAACAxQuUgAh+QQBCgADACwAAAAABgABAAACA5SAUgAh+QQBCgADACwAAAAABgABAAACA5SBBQAh+QQBCgADACwAAAAABgABAAACA4QOUAAh+QQBCgADACwAAAAABgABAAACAwSEUAAh+QQBCgADACwAAAAABgABAAACA4SFBQA7);}
 .block_l,.block_r{background:url(data:image/gif;base64,R0lGODlhAQAGAKEAAP///wAAADY2Nv///yH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQACgD/ACwAAAAAAQAGAAACAxQuUgAh+QQBCgADACwAAAAAAQAGAAACA5SAUgAh+QQBCgADACwAAAAAAQAGAAACA5SBBQAh+QQBCgADACwAAAAAAQAGAAACA4QOUAAh+QQBCgADACwAAAAAAQAGAAACAwSEUAAh+QQBCgADACwAAAAAAQAGAAACA4SFBQA7);}
+.block_main{background: rgba(0,0,0,.5); text-align: center; color: #fff;}
 *[contentEditable="true"]{ background:#fff;}
 
 .Blickcookroom a{

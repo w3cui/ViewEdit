@@ -6,11 +6,11 @@
 		switch (type) {
 
 			case "main":
-				return '<div class="blockBottom">"当前可编辑区域<span >' + (this.cacheList.length || 0) + '</span>个,是否修改？"</span><a>保存</a><a href="">取消</a>' + data.addBtn + '</div>';
+				return '<div class="blockBottom">"当前可编辑区域<span >' + (this.cacheList().length || 0) + '</span>个,是否修改？"</span><a>保存</a><a href="">取消</a>' + data.addBtn + '</div>';
 				break;
 
 			case "block":
-				return '<div class="block_l blockbk"></div><div class="block_r blockbk"></div><div class="block_t blockbk"></div><div class="block_b blockbk"></div>';
+				return '<div class="block_l blockbk"></div><div class="block_r blockbk"></div><div class="block_t blockbk"></div><div class="block_b blockbk"></div><div class="block_main blockbk">新加模块</div>';
 				break;
 
 			case "img":
@@ -41,7 +41,7 @@
 	 */
 	fn.cacheListUp = function($key, $data, $url, $index) {
 		var $this = this;
-		$.each(this.cacheList, function(index, val) {
+		$.each(this.cacheList(), function(index, val) {
 			if ($key == this.key) {
 				var _this = $("<div>" + this.value + "</div>");
 				$.each(_this.find("img"), function(index, val) {
@@ -71,7 +71,7 @@
 					if ($(this).attr("minsrc")) {
 						$(this).attr("src", $(this).attr("minsrc")).removeAttr('minsrc');
 					} else {
-						var url = $("<div>" + $this.cacheList[index1].value + "</div>").find("img:eq(" + index + ")").attr("src");
+						var url = $("<div>" + $this.cacheList()[index1].value + "</div>").find("img:eq(" + index + ")").attr("src");
 						var min = $this.isOss(url);
 						var tpurl = $this.isSrc($(this).attr("data-original"));
 						$(this).attr("src", tpurl + min).removeAttr('minsrc')
@@ -90,7 +90,7 @@
 		return $data;
 	};
 	// 绘制编辑区域
-	fn.curve = function(_this, prentThis) {
+	fn.curve = function(_this, prentThis,isTpl) {
 		$(".blockbk").hide();
 		var curveobj = this.ergodic().calculationErgodic(_this);
 
@@ -100,9 +100,22 @@
 		} else {
 			draw();
 			$(".blockbk").show();
+			if(!isTpl){
+				$(".block_main").hide();
+			}
 		}
 
 		function draw() {
+			if(isTpl){
+				$(".block_main").css({
+					"height": curveobj.height,
+					"left": curveobj.left,
+					"top": curveobj.top,
+					"width": curveobj.width,
+					"display" : "block",
+					"line-height": curveobj.height +"px"
+				});
+			}
 			$(".block_l").css({
 				"height": curveobj.height,
 				"left": curveobj.left,
@@ -130,13 +143,6 @@
 	// 锁定可编辑的区域块
 	fn.BlockMoveHtml = function(id, style, type) { //'{width:;height:;top:;left:;}'
 		var button = ""
-		console.log(type);
-		// button += type == "IMG" ? '<a href="javascript:;" class="img" data-block="' + id + '" >编辑图片</a>\
-		// <a href="javascript:;" data-block="' + id + '" class="link" >编辑链接</a>' : '';
-
-		// button += type == "A" ? '<a href="javascript:;" class="img" data-block="' + id + '" >编辑图片</a>\
-		// <a href="javascript:;" data-block="' + id + '" class="link" >编辑链接</a>' : '';
-
 		button += '<a href="javascript:;" class="img" data-block="' + id + '" >编辑图片</a>'+
 		'<a href="javascript:;" data-block="' + id + '" class="link" >编辑链接</a>' +
 		'<a href="javascript:;" data-block="' + id + '" class="addtpl" >新增</a>' ;
@@ -216,7 +222,7 @@
 				$("#Blick" + $(prentThis).attr($this.config.el)).find(".addtpl").unbind('click').click(function() {
 					$editType.addTpl(prentThis,_this);
 				}).unbind('hover').hover(function(event) {
-					$this.curve($(_this), $(_this));
+					$this.curve($(_this), $(_this),true);
 				},function(){
 					$(".blockbk").hide();
 				});

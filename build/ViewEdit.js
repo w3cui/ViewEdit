@@ -19918,7 +19918,18 @@ module.exports = XHR;
 		this.config = config;
 
 		// 默认数据缓存队列
-		this.cacheList = new Array();
+		this.cacheList = function(){
+			var cacheList = [];
+			var $this = this;
+			$.each(this.el(), function() {
+				var valData = {
+					"key": $(this).attr($this.config.el),
+					"value": $(this).html()
+				};
+				cacheList.push(valData);
+			});
+			return cacheList;
+		};
 
 		// 初始化
 		this.init = function(api) {
@@ -19945,7 +19956,7 @@ module.exports = XHR;
 		var d = new Date;
 		return d.getTime();
 	};
-	
+
 	// 判断图片截取规则
 	fn.isOss = function($src) {
 		var retSrc = $src.match(/\@(.*)/) ? $src.match(/\@(.*)/)[0] :
@@ -20011,7 +20022,7 @@ module.exports = XHR;
 				var defhtmltext = $("<div></div>"),
 					defobj = new Array();
 
-				$.each($this.cacheList, function(index, val) {
+				$.each($this.cacheList(), function(index, val) {
 					if (this.key == $(prentThis).attr($this.config.el)) {
 						defhtmltext = $("<div>" + this.value + "</div>");
 					}
@@ -20161,7 +20172,7 @@ module.exports = XHR;
 			addTpl:function(prentThis,_this){
 				$(_this).before($(_this).clone());
 				$(_this).removeAttr($this.config.addTemplate);
-				$this.curve($(_this), $(_this));
+				$this.curve($(_this), $(_this),true);
 			}
 
 		};
@@ -21497,20 +21508,13 @@ module.exports = XHR;
 	var fn = $viewEdit.__proto__;
 	fn.resize = function() {
 		var $this = this;
-		// 创建存储dom 
-		$.each(this.el(), function() {
-			var valData = {
-				"key": $(this).attr($this.config.el),
-				"value": $(this).html()
-			};
-			$this.cacheList.push(valData);
-		});
+		
 
 		$("body").append(this.template({
 			addBtn: "<a>新增</a>"
 		}, "main"));
 
-		if (this.cacheList.length == 0) return false;
+		if (this.cacheList().length == 0) return false;
 
 		this.elockOff();
 
@@ -21634,11 +21638,11 @@ module.exports = XHR;
 		switch (type) {
 
 			case "main":
-				return '<div class="blockBottom">"当前可编辑区域<span >' + (this.cacheList.length || 0) + '</span>个,是否修改？"</span><a>保存</a><a href="">取消</a>' + data.addBtn + '</div>';
+				return '<div class="blockBottom">"当前可编辑区域<span >' + (this.cacheList().length || 0) + '</span>个,是否修改？"</span><a>保存</a><a href="">取消</a>' + data.addBtn + '</div>';
 				break;
 
 			case "block":
-				return '<div class="block_l blockbk"></div><div class="block_r blockbk"></div><div class="block_t blockbk"></div><div class="block_b blockbk"></div>';
+				return '<div class="block_l blockbk"></div><div class="block_r blockbk"></div><div class="block_t blockbk"></div><div class="block_b blockbk"></div><div class="block_main blockbk">新加模块</div>';
 				break;
 
 			case "img":
@@ -21669,7 +21673,7 @@ module.exports = XHR;
 	 */
 	fn.cacheListUp = function($key, $data, $url, $index) {
 		var $this = this;
-		$.each(this.cacheList, function(index, val) {
+		$.each(this.cacheList(), function(index, val) {
 			if ($key == this.key) {
 				var _this = $("<div>" + this.value + "</div>");
 				$.each(_this.find("img"), function(index, val) {
@@ -21699,7 +21703,7 @@ module.exports = XHR;
 					if ($(this).attr("minsrc")) {
 						$(this).attr("src", $(this).attr("minsrc")).removeAttr('minsrc');
 					} else {
-						var url = $("<div>" + $this.cacheList[index1].value + "</div>").find("img:eq(" + index + ")").attr("src");
+						var url = $("<div>" + $this.cacheList()[index1].value + "</div>").find("img:eq(" + index + ")").attr("src");
 						var min = $this.isOss(url);
 						var tpurl = $this.isSrc($(this).attr("data-original"));
 						$(this).attr("src", tpurl + min).removeAttr('minsrc')
@@ -21718,7 +21722,7 @@ module.exports = XHR;
 		return $data;
 	};
 	// 绘制编辑区域
-	fn.curve = function(_this, prentThis) {
+	fn.curve = function(_this, prentThis,isTpl) {
 		$(".blockbk").hide();
 		var curveobj = this.ergodic().calculationErgodic(_this);
 
@@ -21728,9 +21732,22 @@ module.exports = XHR;
 		} else {
 			draw();
 			$(".blockbk").show();
+			if(!isTpl){
+				$(".block_main").hide();
+			}
 		}
 
 		function draw() {
+			if(isTpl){
+				$(".block_main").css({
+					"height": curveobj.height,
+					"left": curveobj.left,
+					"top": curveobj.top,
+					"width": curveobj.width,
+					"display" : "block",
+					"line-height": curveobj.height +"px"
+				});
+			}
 			$(".block_l").css({
 				"height": curveobj.height,
 				"left": curveobj.left,
@@ -21758,13 +21775,6 @@ module.exports = XHR;
 	// 锁定可编辑的区域块
 	fn.BlockMoveHtml = function(id, style, type) { //'{width:;height:;top:;left:;}'
 		var button = ""
-		console.log(type);
-		// button += type == "IMG" ? '<a href="javascript:;" class="img" data-block="' + id + '" >编辑图片</a>\
-		// <a href="javascript:;" data-block="' + id + '" class="link" >编辑链接</a>' : '';
-
-		// button += type == "A" ? '<a href="javascript:;" class="img" data-block="' + id + '" >编辑图片</a>\
-		// <a href="javascript:;" data-block="' + id + '" class="link" >编辑链接</a>' : '';
-
 		button += '<a href="javascript:;" class="img" data-block="' + id + '" >编辑图片</a>'+
 		'<a href="javascript:;" data-block="' + id + '" class="link" >编辑链接</a>' +
 		'<a href="javascript:;" data-block="' + id + '" class="addtpl" >新增</a>' ;
@@ -21844,7 +21854,7 @@ module.exports = XHR;
 				$("#Blick" + $(prentThis).attr($this.config.el)).find(".addtpl").unbind('click').click(function() {
 					$editType.addTpl(prentThis,_this);
 				}).unbind('hover').hover(function(event) {
-					$this.curve($(_this), $(_this));
+					$this.curve($(_this), $(_this),true);
 				},function(){
 					$(".blockbk").hide();
 				});

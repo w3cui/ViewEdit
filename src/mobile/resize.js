@@ -4,20 +4,13 @@
 	var fn = $viewEdit.__proto__;
 	fn.resize = function() {
 		var $this = this;
-		// 创建存储dom 
-		$.each(this.el(), function() {
-			var valData = {
-				"key": $(this).attr($this.config.el),
-				"value": $(this).html()
-			};
-			$this.cacheList.push(valData);
-		});
+		
 
 		$("body").append(this.template({
 			addBtn: "<a>新增</a>"
 		}, "main"));
 
-		if (this.cacheList.length == 0) return false;
+		if (this.cacheList().length == 0) return false;
 
 		this.elockOff();
 
