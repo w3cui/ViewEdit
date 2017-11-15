@@ -1,6 +1,5 @@
 !(function(win, $, $viewEdit) {
 	"use strict";
-	// 初始化
 	var fn = $viewEdit.__proto__;
 	var config = $viewEdit.config;
 	fn.webUploader = function(_this) {

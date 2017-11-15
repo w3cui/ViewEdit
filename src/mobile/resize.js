@@ -68,37 +68,36 @@
 							"data": $this.contrastList()
 						}),
 						dataType: "json"
-					},
-					function(data) {
-						
-						$viewEdit.layer.close(index);
+				},
+				function(data) {
+					
+					$viewEdit.layer.close(index);
 
-						if(fn.onSavedataSucces){
-							fn.onSavedataSucces(0,data);
-							return;
-						}			
+					if(fn.onSavedataSucces){
+						fn.onSavedataSucces(0,data);
+						return;
+					}			
 
-						if (data.status == 200 || data.code == 0) {
-							$viewEdit.layer.msg("保存成功！", {
-								icon: 7
-							});
-						} else {
-							$viewEdit.layer.msg(data.msg, {
-								icon: 7
-							});
-						}
-
-					},function(data){
-						if(fn.onSavedataSucces){
-							fn.onSavedataSucces(1,data);
-							return;
-						}						
-						$viewEdit.layer.msg("链接服务器失败！", {
+					if (data.status == 200 || data.code == 0) {
+						$viewEdit.layer.msg("保存成功！", {
 							icon: 7
 						});
-						
+					} else {
+						$viewEdit.layer.msg(data.msg, {
+							icon: 7
+						});
 					}
-				);
+
+				},function(data){
+					if(fn.onSavedataSucces){
+						fn.onSavedataSucces(1,data);
+						return;
+					}						
+					$viewEdit.layer.msg("链接服务器失败！", {
+						icon: 7
+					});
+					
+				});
 			}
 		});
 

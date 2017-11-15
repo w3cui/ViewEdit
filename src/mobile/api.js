@@ -35,6 +35,8 @@
 			}
 		};
 	})();
+	
+	// 设置回调
 	fn.on = function(type,callback){
 		switch (type) {
 			case "uploadSuccess":

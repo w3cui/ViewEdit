@@ -1,6 +1,5 @@
 !(function(win, $, $viewEdit) {
 	"use strict";
-	// 初始化
 	var fn = $viewEdit.__proto__;
 	fn.template = function(data, type) {
 		switch (type) {
@@ -35,6 +34,7 @@
 		}
 		return this;
 	};
+
 	/*
 	 *	@设置延迟加载修改初始数据
 	 *	@key =>>$t  @data =>> 小图于大图尺寸  @ulr  =>> 更新图片地址  @index =>> 图片的index
@@ -59,6 +59,7 @@
 			}
 		});
 	};
+
 	// 查找变化后的元素
 	fn.contrastList = function() {
 		var $this = this;
@@ -89,6 +90,7 @@
 		});
 		return $data;
 	};
+
 	// 绘制编辑区域
 	fn.curve = function(_this, prentThis,isTpl) {
 		$(".blockbk").hide();
@@ -106,6 +108,7 @@
 		}
 
 		function draw() {
+
 			if(isTpl){
 				$(".block_main").css({
 					"height": curveobj.height,
@@ -116,6 +119,7 @@
 					"line-height": curveobj.height +"px"
 				});
 			}
+
 			$(".block_l").css({
 				"height": curveobj.height,
 				"left": curveobj.left,
@@ -169,12 +173,12 @@
 	}
 
 	/*
-	*	ergodic();	构造不同类型处理方式
-		ergodic.imgErgodic();  图片处理
-		ergodic.linkErgodic();  链接处理
-		ergodic.textErgodic();  其他处理
-		ergodic.calculationErgodic() 计算高宽坐标
-	*	ergodicType();	判断可编辑区域内所有编辑对象的类型并且绑定事件
+	 *	ergodic();	构造不同类型处理方式
+	 *	ergodic.imgErgodic();  图片处理
+	 *	ergodic.linkErgodic();  链接处理
+	 *	ergodic.textErgodic();  其他处理
+	 *	ergodic.calculationErgodic() 计算高宽坐标
+	 *	ergodicType();	判断可编辑区域内所有编辑对象的类型并且绑定事件
 	*/
 
 	// 构造不同类型处理方式	
@@ -182,6 +186,8 @@
 		var $this = this;
 		var $editType = this.editType();
 		return {
+
+			// 图片处理
 			imgErgodic: function(_this, prentThis) {
 				var object = this.calculationErgodic(prentThis);
 				$this.BlockMoveHtml($(prentThis).attr($this.config.el), "width:" + object.width + "px;height:" + 0 + "px;top:" + object.top + "px;left:" + object.left + "px;", "IMG");
@@ -195,6 +201,8 @@
 					$editType.imgTpl(prentThis);
 				});
 			},
+
+			// 链接处理
 			linkErgodic: function(_this, prentThis) {
 				var object = this.calculationErgodic(prentThis);
 				$this.BlockMoveHtml($(prentThis).attr($this.config.el), "width:" + object.width + "px;height:" + 0 + "px;top:" + object.top + "px;left:" + object.left + "px;", "A");
@@ -208,7 +216,6 @@
 					$editType.linkTpl(prentThis, event);
 				});
 			},
-			textErgodic: function() {},
 
 			// 新增加模块
 			addTplErgodic : function(_this, prentThis){
@@ -227,6 +234,8 @@
 					$(".blockbk").hide();
 				});
 			},
+
+			// 计算坐标
 			calculationErgodic: function(_this) {
 				return {
 					width: $(_this).width() + parseInt($(_this).css('padding-right')) + parseInt($(_this).css('padding-left')) + (parseInt($('div').css('borderTopWidth')) || 0) * 2,
@@ -243,9 +252,12 @@
 		var $this = this,
 			$ergodicType = this.ergodic();
 		$.each($(_this).find("*"), function() {
+
+			// 添加自定义模块
 			if(typeof $(this).attr($this.config.addTemplate) != "undefined"){
 				$ergodicType.addTplErgodic(this, _this);
 			}
+
 			switch (this.tagName) {
 				case "IMG": //图片编辑
 					$ergodicType.imgErgodic(this, _this);
