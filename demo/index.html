@@ -19,6 +19,7 @@
 <script type="text/javascript" src="http://localhost:3000/build/ViewEdit.js"></script>
 <script type="text/javascript">
 	window.onload = function(){
+
 		var edit = VE.init({
 			el:"page-key",
 			formData:{
@@ -28,7 +29,17 @@
 				server:"测试"
 			}
 		});
-	console.log(edit);
+
+		// 上传插件图片上传回调成功
+		edit.on("uploadSuccess",function(event,file,response){
+			alert("1");
+		});
+
+		// 保存数据成功
+		edit.on("savedataSucces",function(isSucces,data){
+			alert("2");
+		});
+		console.log(edit);
 	}
 	
 </script>

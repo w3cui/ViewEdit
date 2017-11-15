@@ -34,5 +34,16 @@
 				return newobj;
 			}
 		};
-	})()
+	})();
+	fn.on = function(type,callback){
+		switch (type) {
+			case "uploadSuccess":
+				fn.onUploadSuccess = callback;
+			break;
+			case "savedataSucces":
+				fn.onSavedataSucces = callback;
+			break;
+			
+		}	
+	};
 })(window, $, window.VE);

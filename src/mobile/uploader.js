@@ -19,7 +19,7 @@
 				$viewEdit.layer.msg("请上传JPG、GIF、PNG、JPEG、BMP格式");
 				return false;
 			} else if (type == "Q_EXCEED_NUM_LIMIT") {
-				
+
 				$viewEdit.layer.msg("超过图片最大上传数量");
 				return false;
 			} else {
@@ -38,6 +38,13 @@
 		// 服务器回调
 		uploader.on('uploadSuccess', function(file, response) {
 			$viewEdit.layer.close(index);
+
+			// 自定义回调处理
+			if(fn.onUploadSuccess){
+				fn.onUploadSuccess(_this, file, response);
+				return false;
+			};
+
 			if (response.code == 200) {
 				$(_this).parent().find("img").attr("src", response.fileurl);
 				$(_this).parents("li").find("input[name='urlsrc']").val(response.fileurl);
@@ -50,10 +57,11 @@
 				}
 				//$viewEdit.layer.msg("服务器繁忙请稍后再试...")
 			}
+			
 		});
 		//所有文件上传后触发    
 		uploader.on('uploadError', function(file) {
-			$viewEdit.layer.close(index);
+			$viewEdit.layer.close(index);			
 			$viewEdit.layer.msg("服务器链接失败！");
 		});
 

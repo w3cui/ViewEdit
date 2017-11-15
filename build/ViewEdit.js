@@ -20008,7 +20008,18 @@ module.exports = XHR;
 				return newobj;
 			}
 		};
-	})()
+	})();
+	fn.on = function(type,callback){
+		switch (type) {
+			case "uploadSuccess":
+				fn.onUploadSuccess = callback;
+			break;
+			case "savedataSucces":
+				fn.onSavedataSucces = callback;
+			break;
+			
+		}	
+	};
 })(window, $, window.VE);!(function(win, $, $viewEdit) {
 	"use strict";
 	// 初始化
@@ -21578,7 +21589,14 @@ module.exports = XHR;
 						dataType: "json"
 					},
 					function(data) {
+						
 						$viewEdit.layer.close(index);
+
+						if(fn.onSavedataSucces){
+							fn.onSavedataSucces(0,data);
+							return;
+						}			
+
 						if (data.status == 200 || data.code == 0) {
 							$viewEdit.layer.msg("保存成功！", {
 								icon: 7
@@ -21588,6 +21606,16 @@ module.exports = XHR;
 								icon: 7
 							});
 						}
+
+					},function(data){
+						if(fn.onSavedataSucces){
+							fn.onSavedataSucces(1,data);
+							return;
+						}						
+						$viewEdit.layer.msg("链接服务器失败！", {
+							icon: 7
+						});
+						
 					}
 				);
 			}
@@ -21916,7 +21944,7 @@ module.exports = XHR;
 				$viewEdit.layer.msg("请上传JPG、GIF、PNG、JPEG、BMP格式");
 				return false;
 			} else if (type == "Q_EXCEED_NUM_LIMIT") {
-				
+
 				$viewEdit.layer.msg("超过图片最大上传数量");
 				return false;
 			} else {
@@ -21935,6 +21963,13 @@ module.exports = XHR;
 		// 服务器回调
 		uploader.on('uploadSuccess', function(file, response) {
 			$viewEdit.layer.close(index);
+
+			// 自定义回调处理
+			if(fn.onUploadSuccess){
+				fn.onUploadSuccess(_this, file, response);
+				return false;
+			};
+
 			if (response.code == 200) {
 				$(_this).parent().find("img").attr("src", response.fileurl);
 				$(_this).parents("li").find("input[name='urlsrc']").val(response.fileurl);
@@ -21947,10 +21982,11 @@ module.exports = XHR;
 				}
 				//$viewEdit.layer.msg("服务器繁忙请稍后再试...")
 			}
+			
 		});
 		//所有文件上传后触发    
 		uploader.on('uploadError', function(file) {
-			$viewEdit.layer.close(index);
+			$viewEdit.layer.close(index);			
 			$viewEdit.layer.msg("服务器链接失败！");
 		});
 
