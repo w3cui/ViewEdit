@@ -19910,7 +19910,7 @@ module.exports = XHR;
 
 	var $VE = function() {
 		this.v = '1.0.0';
-	};
+	}; 
 
 	var fn = $VE.prototype;
 	// 查找绑定可编辑的元素
