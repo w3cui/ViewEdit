@@ -9727,7 +9727,7 @@ module.exports = XHR;
 		return {
 			ajax: function(ajaxData, callback, error) {
 				error = error ? error : function(data) {
-					$viewEdit.layer.msg('服务器繁忙请稍后再试！');
+					$viewEdit.popup.msg('服务器繁忙请稍后再试！');
 				};
 				var $this = this;
 				ajaxData.url = ajaxData.url + "?t=" + Math.random();
@@ -9735,7 +9735,7 @@ module.exports = XHR;
 				ajaxData.dataType = ajaxData.dataType ? ajaxData.dataType : "json";
 				ajaxData.data = ajaxData.data ? ajaxData.data : {};
 				ajaxData.error = ajaxData.error ? ajaxData.error : function(data) {
-					$viewEdit.layer.closeAll('loading');
+					$viewEdit.popup.closeAll('loading');
 					error(data);
 				};
 				ajaxData.success = function(data) {
@@ -10020,9 +10020,11 @@ module.exports = XHR;
 		},
 
 		// 全部关闭
-		closeAll: function() {},
-
-
+		closeAll: function() {
+			$(".ve-popup-main").fadeOut(200, function() {
+				$(this).remove();
+			});
+		}
 
 	};
 

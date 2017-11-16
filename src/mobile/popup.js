@@ -58,9 +58,11 @@
 		},
 
 		// 全部关闭
-		closeAll: function() {},
-
-
+		closeAll: function() {
+			$(".ve-popup-main").fadeOut(200, function() {
+				$(this).remove();
+			});
+		}
 
 	};
 
