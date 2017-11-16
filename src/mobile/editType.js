@@ -1,8 +1,9 @@
 !(function(win, $, $viewEdit) {
 	"use strict";
 	// 初始化
-	var fn = $viewEdit.__proto__;
+	var fn = $viewEdit.__proto__;	
 	fn.editType = function() {
+		var $config = $viewEdit.config();
 		var $this = this;
 		return {
 
@@ -14,16 +15,14 @@
 					defobj = new Array();
 
 				$.each($this.cacheList(), function(index, val) {
-					if (this.key == $(prentThis).attr($this.config.el)) {
+					if (this.key == $(prentThis).attr($config.el)) {
 						defhtmltext = $("<div>" + this.value + "</div>");
 					}
 				});
 
 				$.each(defhtmltext.find("img"), function(index, val) {
-					// var minsrc = $(this).attr("src").match(/\@(.*)/) ? $(this).attr("src").match(/\@(.*)/)[0] : "";
 					var minsrc = $this.isOss($(this).attr("src"));
 					if ($(this).attr("data-original")) {
-						// var maxsrc = $(this).attr("data-original").match(/\@(.*)/) ? $(this).attr("data-original").match(/\@(.*)/)[0] : "";
 						var maxsrc = $this.isOss($(this).attr("data-original"));
 					} else {
 						var maxsrc = "";
@@ -37,7 +36,6 @@
 
 				$.each($(prentThis).find("img"), function(index) {
 					var src = $(this).attr("data-original") ? $(this).attr("data-original") : $(this).attr("src");
-					// src = src.match(/(.*)\@/) ?  src.match(/(.*)\@/)[1] : src ;
 					src = $this.isSrc(src);
 					var checkbox = $(this).attr("data-original") ? 'checked="checked"' : "";
 					var display = $(this).attr("data-original") ? 'display:block' : "display:none";
@@ -62,7 +60,6 @@
 					yes: function(index, layero) {
 						var msgthis = true;
 						$.each($(".blockimglist li"), function(index, val) {
-							//$(prentThis).find("img:eq("+index+")").attr("src",$(this).find("input[name='urlsrc']").val());
 							var srcObject = {
 								urlsrc: $(this).find("input[name='urlsrc']"),
 								minsrc: $(this).find("input[name='urlmin']"),
@@ -76,7 +73,7 @@
 								}
 								$(prentThis).find("img:eq(" + index + ")").attr("data-original", srcObject.urlsrc.val() + srcObject.maxsrc.val());
 								$(prentThis).find("img:eq(" + index + ")").attr("minsrc", srcObject.urlsrc.val() + srcObject.minsrc.val());
-								$this.cacheListUp($(prentThis).attr("*[" + $this.config.el + "]"), {
+								$this.cacheListUp($(prentThis).attr("*[" + $config.el + "]"), {
 									"minsrc": srcObject.minsrc.val(),
 									"maxsrc": srcObject.maxsrc.val()
 								}, srcObject.urlsrc.val(), index);
@@ -93,7 +90,7 @@
 					}
 				});
 
-				//var index = $this.layer.load(0, {shade: [0.1,'#fff'] });
+
 				// 载入webuploader
 				$(".blockimglist").append(imglist).find("input[type='file']");
 				$(".blockimglist input[name='checkbox']").change(function() {
@@ -103,6 +100,7 @@
 						$(this).parents("li").find(".divupimg").hide();
 					}
 				});
+				// 初始化webuploader
 				$.each($(".blockimglist").find("a"), function() {
 					$this.webUploader("#" + $(this).attr("id"));
 				});
@@ -124,7 +122,7 @@
 						allowTaint: true,
 						taintTest: false,
 						width: 180,
-      			height: 150,
+						height: 150,
 						onrendered: function(canvas) {
 							canvas.id = "mycanvas" + index;
 							$(document).scrollTop(soltop);
@@ -132,6 +130,7 @@
 						}
 					});
 
+					// 添加内容
 					var tplList = $this.template({
 						"index": index,
 						"title": title,
@@ -145,26 +144,24 @@
 					type: 1,
 					btn: ['保存', '取消'] //按钮
 				}, function(index, layero) {
-					$.each($(".blockimglist li"), function(index, val) {
-						$(prentThis).find("a:eq(" + index + ")").attr("href", $(this).find("input[name='href']").val())
-							//.html($(this).find("div.text").html())
+					$.each($(".blockimglist li"), function(index, val) {						
+						$(prentThis).find("a:eq(" + index + ")")
+							.attr("href", $(this).find("input[name='href']").val())
 							.attr("title", $(this).find("textarea[name='title']").val());
 					});
 					$this.layer.close(index);
 					$this.layer.msg('操作成功！', {
 						icon: 1
 					});
-				}, function() {
-
 				});
 				$(".blockimglist").append(linklist);
 			},
 
 			// 自定义新增模块
-			addTpl:function(prentThis,_this){
+			addTpl: function(prentThis, _this) {
 				$(_this).before($(_this).clone());
-				$(_this).removeAttr($this.config.addTemplate);
-				$this.curve($(_this), $(_this),true);
+				$(_this).removeAttr($config.addTemplate);
+				$this.curve($(_this), $(_this), true);
 				$this.elockOff();
 			}
 

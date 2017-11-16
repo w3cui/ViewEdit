@@ -2,12 +2,13 @@
 	"use strict";
 	// 初始化
 	var fn = $viewEdit.__proto__;
+	
 	fn.resize = function() {
 		var $this = this;
-		
+		var $config = $viewEdit.config();
 
 		$("body").append(this.template({
-			addBtn: $this.config.btn
+			addBtn: $config.btn
 		}, "main"));
 
 		if (this.cacheList().length == 0) return false;
@@ -44,6 +45,7 @@
 	// 启动编辑
 	fn.elockOff = function() {
 		var $this = this;
+		var $config = $viewEdit.config();
 
 		// 获取
 		$.each(this.el(), function(index, val) {
@@ -63,13 +65,12 @@
 				}
 				$this.api.ajax({
 						type: "POST",
-						url: $this.config.serverUrl,
-						data: $.extend($this.config.formData, {
+						url: $config.serverUrl,
+						data: $.extend($config.formData, {
 							"data": $this.contrastList()
 						}),
 						dataType: "json"
-				},
-				function(data) {
+				},function(data) {
 					
 					$viewEdit.layer.close(index);
 
@@ -130,15 +131,12 @@
 				$this.el().find("*").removeAttr('contentEditable');
 			});
 		}).unbind('hover').hover(function() {
-			$this.curve($(this).parents("*[" + $this.config.el + "]"), $(this).parents("*[" + $this.config.el + "]"));
+			$this.curve($(this).parents("*[" + $config.el + "]"), $(this).parents("*[" + $config.el + "]"));
 		}, function() {
 			$(".blockbk").hide();
 		});
 	};
 
-	fn.showInit = function() {
-
-	};
 
 
 })(window, $, window.VE);

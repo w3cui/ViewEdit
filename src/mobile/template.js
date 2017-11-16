@@ -62,6 +62,8 @@
 
 	// 查找变化后的元素
 	fn.contrastList = function() {
+
+		var $config = $viewEdit.config();
 		var $this = this;
 		var $data = new Array();
 		$.each(this.el(), function(index1) {
@@ -82,7 +84,7 @@
 			});
 
 			var valData = {
-				"key": $(this).attr($this.config.el),
+				"key": $(this).attr($config.el),
 				"value": htmltext.html().replace(/[\t\r\n]*/g, "").replace(/>[ ]*/g, ">").replace(/[ ]*</g, "<"),
 			};
 			$data.push(valData);
@@ -183,6 +185,7 @@
 
 	// 构造不同类型处理方式	
 	fn.ergodic = function() {
+		var $config = $viewEdit.config();
 		var $this = this;
 		var $editType = this.editType();
 		return {
@@ -190,14 +193,14 @@
 			// 图片处理
 			imgErgodic: function(_this, prentThis) {
 				var object = this.calculationErgodic(prentThis);
-				$this.BlockMoveHtml($(prentThis).attr($this.config.el), "width:" + object.width + "px;height:" + 0 + "px;top:" + object.top + "px;left:" + object.left + "px;", "IMG");
+				$this.BlockMoveHtml($(prentThis).attr($config.el), "width:" + object.width + "px;height:" + 0 + "px;top:" + object.top + "px;left:" + object.left + "px;", "IMG");
 				
 				if ($(prentThis).is(':hidden')) {
-					$("#Blick" + $(prentThis).attr($this.config.el)).hide();
+					$("#Blick" + $(prentThis).attr($config.el)).hide();
 				} else {
-					$("#Blick" + $(prentThis).attr($this.config.el)).show();
+					$("#Blick" + $(prentThis).attr($config.el)).show();
 				}
-				$("#Blick" + $(prentThis).attr($this.config.el)).find(".img").unbind('click').click(function() {
+				$("#Blick" + $(prentThis).attr($config.el)).find(".img").unbind('click').click(function() {
 					$editType.imgTpl(prentThis);
 				});
 			},
@@ -205,14 +208,14 @@
 			// 链接处理
 			linkErgodic: function(_this, prentThis) {
 				var object = this.calculationErgodic(prentThis);
-				$this.BlockMoveHtml($(prentThis).attr($this.config.el), "width:" + object.width + "px;height:" + 0 + "px;top:" + object.top + "px;left:" + object.left + "px;", "A");
+				$this.BlockMoveHtml($(prentThis).attr($config.el), "width:" + object.width + "px;height:" + 0 + "px;top:" + object.top + "px;left:" + object.left + "px;", "A");
 				
 				if ($(prentThis).is(':hidden')) {
-					$("#Blick" + $(prentThis).attr($this.config.el)).hide();
+					$("#Blick" + $(prentThis).attr($config.el)).hide();
 				} else {
-					$("#Blick" + $(prentThis).attr($this.config.el)).show();
+					$("#Blick" + $(prentThis).attr($config.el)).show();
 				}
-				$("#Blick" + $(prentThis).attr($this.config.el)).find(".link").unbind('click').click(function(event) {
+				$("#Blick" + $(prentThis).attr($config.el)).find(".link").unbind('click').click(function(event) {
 					$editType.linkTpl(prentThis, event);
 				});
 			},
@@ -220,19 +223,24 @@
 			// 新增加模块
 			addTplErgodic : function(_this, prentThis){
 				var object = this.calculationErgodic(_this);
-				$this.BlockMoveHtml($(prentThis).attr($this.config.el), "width:" + object.width + "px;height:" + 0 + "px;top:" + object.top + "px;left:" + object.left + "px;", "tpl");
+				$this.BlockMoveHtml($(prentThis).attr($config.el), "width:" + object.width + "px;height:" + 0 + "px;top:" + object.top + "px;left:" + object.left + "px;", "tpl");
 				if ($(prentThis).is(':hidden')) {
-					$("#Blick" + $(prentThis).attr($this.config.el)).hide();
+					$("#Blick" + $(prentThis).attr($config.el)).hide();
 				} else {
-					$("#Blick" + $(prentThis).attr($this.config.el)).show();
+					$("#Blick" + $(prentThis).attr($config.el)).show();
 				}
-				$("#Blick" + $(prentThis).attr($this.config.el)).find(".addtpl").unbind('click').click(function() {
+				$("#Blick" + $(prentThis).attr($config.el)).find(".addtpl").unbind('click').click(function() {
 					$editType.addTpl(prentThis,_this);
 				}).unbind('hover').hover(function(event) {
 					$this.curve($(_this), $(_this),true);
 				},function(){
 					$(".blockbk").hide();
 				});
+			},
+
+			// 默认处理
+			textErgodic :function(){
+
 			},
 
 			// 计算坐标
@@ -249,12 +257,13 @@
 
 	// 判断可编辑区域内所有编辑对象的类型并且绑定事件
 	fn.ergodicType = function(_this) {
+		var $config = $viewEdit.config();
 		var $this = this,
 			$ergodicType = this.ergodic();
 		$.each($(_this).find("*"), function() {
 
 			// 添加自定义模块
-			if(typeof $(this).attr($this.config.addTemplate) != "undefined"){
+			if(typeof $(this).attr($config.addTemplate) != "undefined"){
 				$ergodicType.addTplErgodic(this, _this);
 			}
 

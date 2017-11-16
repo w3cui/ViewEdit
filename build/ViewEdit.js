@@ -19863,7 +19863,7 @@ module.exports = XHR;
 	/*
 	  	构建基础配置
 	  */
-	var config = {
+	var $config = {
 		// 绑定编辑模块KEY
 		el: "ve-key",
 		// 标签内部新增key
@@ -19908,43 +19908,42 @@ module.exports = XHR;
 
 	};
 
-	var viewEdit = function() {
+	var $VE = function() {
 		this.v = '1.0.0';
-
-		// 查找绑定可编辑的元素
-		this.el = function() {
-			return $("*[" + this.config.el + "]");
-		};
-
-		// 复值config
-		this.config = config;
-
-		// 默认数据缓存队列
-		this.cacheList = function(){
-			var cacheList = [];
-			var $this = this;
-			$.each(this.el(), function() {
-				var valData = {
-					"key": $(this).attr($this.config.el),
-					"value": $(this).html()
-				};
-				cacheList.push(valData);
-			});
-			return cacheList;
-		};
-
-		// 初始化
-		this.init = function(api) {
-			var $this = this;
-			this.config = $.extend(true,$this.api.copy(config),api);
-			// 启动插件
-			this.resize();
-			return this;
-		}
-
 	};
 
-	var fn = viewEdit.prototype;
+	var fn = $VE.prototype;
+	// 查找绑定可编辑的元素
+	fn.el = function() {
+		return $("*[" + $config.el + "]");
+	};
+	// 初始化
+	fn.init = function(api) {
+		var $this = this;
+		$config = $.extend(true,$config,api);
+		// 启动插件
+		this.resize();
+		return this;
+	}
+
+	// 默认数据缓存队列
+	fn.cacheList = function(){
+		var cacheList = [];
+		var $this = this;
+		$.each(this.el(), function() {
+			var valData = {
+				"key": $(this).attr($config.el),
+				"value": $(this).html()
+			};
+			cacheList.push(valData);
+		});
+		return cacheList;
+	};
+
+	// 复值$config
+	fn.config = function(){
+		return this.api.copy($config);
+	};
 
 	// 判断取出图片地址 
 	fn.isSrc = function($src) {
@@ -19971,7 +19970,7 @@ module.exports = XHR;
 		win.console && console.error && console.error('viewEidt hint: ' + msg);
 	};
 
-	window.VE = new viewEdit();
+	window.VE = new $VE();
 })(window, $);!(function(win, $, $viewEdit) {
 	"use strict";
 	// 通用方法
@@ -20009,6 +20008,8 @@ module.exports = XHR;
 			}
 		};
 	})();
+	
+	// 设置回调
 	fn.on = function(type,callback){
 		switch (type) {
 			case "uploadSuccess":
@@ -20023,8 +20024,9 @@ module.exports = XHR;
 })(window, $, window.VE);!(function(win, $, $viewEdit) {
 	"use strict";
 	// 初始化
-	var fn = $viewEdit.__proto__;
+	var fn = $viewEdit.__proto__;	
 	fn.editType = function() {
+		var $config = $viewEdit.config();
 		var $this = this;
 		return {
 
@@ -20036,16 +20038,14 @@ module.exports = XHR;
 					defobj = new Array();
 
 				$.each($this.cacheList(), function(index, val) {
-					if (this.key == $(prentThis).attr($this.config.el)) {
+					if (this.key == $(prentThis).attr($config.el)) {
 						defhtmltext = $("<div>" + this.value + "</div>");
 					}
 				});
 
 				$.each(defhtmltext.find("img"), function(index, val) {
-					// var minsrc = $(this).attr("src").match(/\@(.*)/) ? $(this).attr("src").match(/\@(.*)/)[0] : "";
 					var minsrc = $this.isOss($(this).attr("src"));
 					if ($(this).attr("data-original")) {
-						// var maxsrc = $(this).attr("data-original").match(/\@(.*)/) ? $(this).attr("data-original").match(/\@(.*)/)[0] : "";
 						var maxsrc = $this.isOss($(this).attr("data-original"));
 					} else {
 						var maxsrc = "";
@@ -20059,7 +20059,6 @@ module.exports = XHR;
 
 				$.each($(prentThis).find("img"), function(index) {
 					var src = $(this).attr("data-original") ? $(this).attr("data-original") : $(this).attr("src");
-					// src = src.match(/(.*)\@/) ?  src.match(/(.*)\@/)[1] : src ;
 					src = $this.isSrc(src);
 					var checkbox = $(this).attr("data-original") ? 'checked="checked"' : "";
 					var display = $(this).attr("data-original") ? 'display:block' : "display:none";
@@ -20084,7 +20083,6 @@ module.exports = XHR;
 					yes: function(index, layero) {
 						var msgthis = true;
 						$.each($(".blockimglist li"), function(index, val) {
-							//$(prentThis).find("img:eq("+index+")").attr("src",$(this).find("input[name='urlsrc']").val());
 							var srcObject = {
 								urlsrc: $(this).find("input[name='urlsrc']"),
 								minsrc: $(this).find("input[name='urlmin']"),
@@ -20098,7 +20096,7 @@ module.exports = XHR;
 								}
 								$(prentThis).find("img:eq(" + index + ")").attr("data-original", srcObject.urlsrc.val() + srcObject.maxsrc.val());
 								$(prentThis).find("img:eq(" + index + ")").attr("minsrc", srcObject.urlsrc.val() + srcObject.minsrc.val());
-								$this.cacheListUp($(prentThis).attr("*[" + $this.config.el + "]"), {
+								$this.cacheListUp($(prentThis).attr("*[" + $config.el + "]"), {
 									"minsrc": srcObject.minsrc.val(),
 									"maxsrc": srcObject.maxsrc.val()
 								}, srcObject.urlsrc.val(), index);
@@ -20115,7 +20113,7 @@ module.exports = XHR;
 					}
 				});
 
-				//var index = $this.layer.load(0, {shade: [0.1,'#fff'] });
+
 				// 载入webuploader
 				$(".blockimglist").append(imglist).find("input[type='file']");
 				$(".blockimglist input[name='checkbox']").change(function() {
@@ -20125,6 +20123,7 @@ module.exports = XHR;
 						$(this).parents("li").find(".divupimg").hide();
 					}
 				});
+				// 初始化webuploader
 				$.each($(".blockimglist").find("a"), function() {
 					$this.webUploader("#" + $(this).attr("id"));
 				});
@@ -20146,7 +20145,7 @@ module.exports = XHR;
 						allowTaint: true,
 						taintTest: false,
 						width: 180,
-      			height: 150,
+						height: 150,
 						onrendered: function(canvas) {
 							canvas.id = "mycanvas" + index;
 							$(document).scrollTop(soltop);
@@ -20154,6 +20153,7 @@ module.exports = XHR;
 						}
 					});
 
+					// 添加内容
 					var tplList = $this.template({
 						"index": index,
 						"title": title,
@@ -20167,26 +20167,24 @@ module.exports = XHR;
 					type: 1,
 					btn: ['保存', '取消'] //按钮
 				}, function(index, layero) {
-					$.each($(".blockimglist li"), function(index, val) {
-						$(prentThis).find("a:eq(" + index + ")").attr("href", $(this).find("input[name='href']").val())
-							//.html($(this).find("div.text").html())
+					$.each($(".blockimglist li"), function(index, val) {						
+						$(prentThis).find("a:eq(" + index + ")")
+							.attr("href", $(this).find("input[name='href']").val())
 							.attr("title", $(this).find("textarea[name='title']").val());
 					});
 					$this.layer.close(index);
 					$this.layer.msg('操作成功！', {
 						icon: 1
 					});
-				}, function() {
-
 				});
 				$(".blockimglist").append(linklist);
 			},
 
 			// 自定义新增模块
-			addTpl:function(prentThis,_this){
+			addTpl: function(prentThis, _this) {
 				$(_this).before($(_this).clone());
-				$(_this).removeAttr($this.config.addTemplate);
-				$this.curve($(_this), $(_this),true);
+				$(_this).removeAttr($config.addTemplate);
+				$this.curve($(_this), $(_this), true);
 				$this.elockOff();
 			}
 
@@ -21521,12 +21519,13 @@ module.exports = XHR;
 	"use strict";
 	// 初始化
 	var fn = $viewEdit.__proto__;
+	
 	fn.resize = function() {
 		var $this = this;
-		
+		var $config = $viewEdit.config();
 
 		$("body").append(this.template({
-			addBtn: $this.config.btn
+			addBtn: $config.btn
 		}, "main"));
 
 		if (this.cacheList().length == 0) return false;
@@ -21563,6 +21562,7 @@ module.exports = XHR;
 	// 启动编辑
 	fn.elockOff = function() {
 		var $this = this;
+		var $config = $viewEdit.config();
 
 		// 获取
 		$.each(this.el(), function(index, val) {
@@ -21582,42 +21582,40 @@ module.exports = XHR;
 				}
 				$this.api.ajax({
 						type: "POST",
-						url: $this.config.serverUrl,
-						data: $.extend($this.config.formData, {
+						url: $config.serverUrl,
+						data: $.extend($config.formData, {
 							"data": $this.contrastList()
 						}),
 						dataType: "json"
-					},
-					function(data) {
-						
-						$viewEdit.layer.close(index);
+				},function(data) {
+					
+					$viewEdit.layer.close(index);
 
-						if(fn.onSavedataSucces){
-							fn.onSavedataSucces(0,data);
-							return;
-						}			
+					if(fn.onSavedataSucces){
+						fn.onSavedataSucces(0,data);
+						return;
+					}			
 
-						if (data.status == 200 || data.code == 0) {
-							$viewEdit.layer.msg("保存成功！", {
-								icon: 7
-							});
-						} else {
-							$viewEdit.layer.msg(data.msg, {
-								icon: 7
-							});
-						}
-
-					},function(data){
-						if(fn.onSavedataSucces){
-							fn.onSavedataSucces(1,data);
-							return;
-						}						
-						$viewEdit.layer.msg("链接服务器失败！", {
+					if (data.status == 200 || data.code == 0) {
+						$viewEdit.layer.msg("保存成功！", {
 							icon: 7
 						});
-						
+					} else {
+						$viewEdit.layer.msg(data.msg, {
+							icon: 7
+						});
 					}
-				);
+
+				},function(data){
+					if(fn.onSavedataSucces){
+						fn.onSavedataSucces(1,data);
+						return;
+					}						
+					$viewEdit.layer.msg("链接服务器失败！", {
+						icon: 7
+					});
+					
+				});
 			}
 		});
 
@@ -21650,20 +21648,16 @@ module.exports = XHR;
 				$this.el().find("*").removeAttr('contentEditable');
 			});
 		}).unbind('hover').hover(function() {
-			$this.curve($(this).parents("*[" + $this.config.el + "]"), $(this).parents("*[" + $this.config.el + "]"));
+			$this.curve($(this).parents("*[" + $config.el + "]"), $(this).parents("*[" + $config.el + "]"));
 		}, function() {
 			$(".blockbk").hide();
 		});
 	};
 
-	fn.showInit = function() {
-
-	};
 
 
 })(window, $, window.VE);!(function(win, $, $viewEdit) {
 	"use strict";
-	// 初始化
 	var fn = $viewEdit.__proto__;
 	fn.template = function(data, type) {
 		switch (type) {
@@ -21698,6 +21692,7 @@ module.exports = XHR;
 		}
 		return this;
 	};
+
 	/*
 	 *	@设置延迟加载修改初始数据
 	 *	@key =>>$t  @data =>> 小图于大图尺寸  @ulr  =>> 更新图片地址  @index =>> 图片的index
@@ -21722,8 +21717,11 @@ module.exports = XHR;
 			}
 		});
 	};
+
 	// 查找变化后的元素
 	fn.contrastList = function() {
+
+		var $config = $viewEdit.config();
 		var $this = this;
 		var $data = new Array();
 		$.each(this.el(), function(index1) {
@@ -21744,7 +21742,7 @@ module.exports = XHR;
 			});
 
 			var valData = {
-				"key": $(this).attr($this.config.el),
+				"key": $(this).attr($config.el),
 				"value": htmltext.html().replace(/[\t\r\n]*/g, "").replace(/>[ ]*/g, ">").replace(/[ ]*</g, "<"),
 			};
 			$data.push(valData);
@@ -21752,6 +21750,7 @@ module.exports = XHR;
 		});
 		return $data;
 	};
+
 	// 绘制编辑区域
 	fn.curve = function(_this, prentThis,isTpl) {
 		$(".blockbk").hide();
@@ -21769,6 +21768,7 @@ module.exports = XHR;
 		}
 
 		function draw() {
+
 			if(isTpl){
 				$(".block_main").css({
 					"height": curveobj.height,
@@ -21779,6 +21779,7 @@ module.exports = XHR;
 					"line-height": curveobj.height +"px"
 				});
 			}
+
 			$(".block_l").css({
 				"height": curveobj.height,
 				"left": curveobj.left,
@@ -21832,57 +21833,61 @@ module.exports = XHR;
 	}
 
 	/*
-	*	ergodic();	构造不同类型处理方式
-		ergodic.imgErgodic();  图片处理
-		ergodic.linkErgodic();  链接处理
-		ergodic.textErgodic();  其他处理
-		ergodic.calculationErgodic() 计算高宽坐标
-	*	ergodicType();	判断可编辑区域内所有编辑对象的类型并且绑定事件
+	 *	ergodic();	构造不同类型处理方式
+	 *	ergodic.imgErgodic();  图片处理
+	 *	ergodic.linkErgodic();  链接处理
+	 *	ergodic.textErgodic();  其他处理
+	 *	ergodic.calculationErgodic() 计算高宽坐标
+	 *	ergodicType();	判断可编辑区域内所有编辑对象的类型并且绑定事件
 	*/
 
 	// 构造不同类型处理方式	
 	fn.ergodic = function() {
+		var $config = $viewEdit.config();
 		var $this = this;
 		var $editType = this.editType();
 		return {
+
+			// 图片处理
 			imgErgodic: function(_this, prentThis) {
 				var object = this.calculationErgodic(prentThis);
-				$this.BlockMoveHtml($(prentThis).attr($this.config.el), "width:" + object.width + "px;height:" + 0 + "px;top:" + object.top + "px;left:" + object.left + "px;", "IMG");
+				$this.BlockMoveHtml($(prentThis).attr($config.el), "width:" + object.width + "px;height:" + 0 + "px;top:" + object.top + "px;left:" + object.left + "px;", "IMG");
 				
 				if ($(prentThis).is(':hidden')) {
-					$("#Blick" + $(prentThis).attr($this.config.el)).hide();
+					$("#Blick" + $(prentThis).attr($config.el)).hide();
 				} else {
-					$("#Blick" + $(prentThis).attr($this.config.el)).show();
+					$("#Blick" + $(prentThis).attr($config.el)).show();
 				}
-				$("#Blick" + $(prentThis).attr($this.config.el)).find(".img").unbind('click').click(function() {
+				$("#Blick" + $(prentThis).attr($config.el)).find(".img").unbind('click').click(function() {
 					$editType.imgTpl(prentThis);
 				});
 			},
+
+			// 链接处理
 			linkErgodic: function(_this, prentThis) {
 				var object = this.calculationErgodic(prentThis);
-				$this.BlockMoveHtml($(prentThis).attr($this.config.el), "width:" + object.width + "px;height:" + 0 + "px;top:" + object.top + "px;left:" + object.left + "px;", "A");
+				$this.BlockMoveHtml($(prentThis).attr($config.el), "width:" + object.width + "px;height:" + 0 + "px;top:" + object.top + "px;left:" + object.left + "px;", "A");
 				
 				if ($(prentThis).is(':hidden')) {
-					$("#Blick" + $(prentThis).attr($this.config.el)).hide();
+					$("#Blick" + $(prentThis).attr($config.el)).hide();
 				} else {
-					$("#Blick" + $(prentThis).attr($this.config.el)).show();
+					$("#Blick" + $(prentThis).attr($config.el)).show();
 				}
-				$("#Blick" + $(prentThis).attr($this.config.el)).find(".link").unbind('click').click(function(event) {
+				$("#Blick" + $(prentThis).attr($config.el)).find(".link").unbind('click').click(function(event) {
 					$editType.linkTpl(prentThis, event);
 				});
 			},
-			textErgodic: function() {},
 
 			// 新增加模块
 			addTplErgodic : function(_this, prentThis){
 				var object = this.calculationErgodic(_this);
-				$this.BlockMoveHtml($(prentThis).attr($this.config.el), "width:" + object.width + "px;height:" + 0 + "px;top:" + object.top + "px;left:" + object.left + "px;", "tpl");
+				$this.BlockMoveHtml($(prentThis).attr($config.el), "width:" + object.width + "px;height:" + 0 + "px;top:" + object.top + "px;left:" + object.left + "px;", "tpl");
 				if ($(prentThis).is(':hidden')) {
-					$("#Blick" + $(prentThis).attr($this.config.el)).hide();
+					$("#Blick" + $(prentThis).attr($config.el)).hide();
 				} else {
-					$("#Blick" + $(prentThis).attr($this.config.el)).show();
+					$("#Blick" + $(prentThis).attr($config.el)).show();
 				}
-				$("#Blick" + $(prentThis).attr($this.config.el)).find(".addtpl").unbind('click').click(function() {
+				$("#Blick" + $(prentThis).attr($config.el)).find(".addtpl").unbind('click').click(function() {
 					$editType.addTpl(prentThis,_this);
 				}).unbind('hover').hover(function(event) {
 					$this.curve($(_this), $(_this),true);
@@ -21890,6 +21895,13 @@ module.exports = XHR;
 					$(".blockbk").hide();
 				});
 			},
+
+			// 默认处理
+			textErgodic :function(){
+
+			},
+
+			// 计算坐标
 			calculationErgodic: function(_this) {
 				return {
 					width: $(_this).width() + parseInt($(_this).css('padding-right')) + parseInt($(_this).css('padding-left')) + (parseInt($('div').css('borderTopWidth')) || 0) * 2,
@@ -21903,12 +21915,16 @@ module.exports = XHR;
 
 	// 判断可编辑区域内所有编辑对象的类型并且绑定事件
 	fn.ergodicType = function(_this) {
+		var $config = $viewEdit.config();
 		var $this = this,
 			$ergodicType = this.ergodic();
 		$.each($(_this).find("*"), function() {
-			if(typeof $(this).attr($this.config.addTemplate) != "undefined"){
+
+			// 添加自定义模块
+			if(typeof $(this).attr($config.addTemplate) != "undefined"){
 				$ergodicType.addTplErgodic(this, _this);
 			}
+
 			switch (this.tagName) {
 				case "IMG": //图片编辑
 					$ergodicType.imgErgodic(this, _this);
@@ -21925,13 +21941,12 @@ module.exports = XHR;
 
 })(window, $, window.VE);!(function(win, $, $viewEdit) {
 	"use strict";
-	// 初始化
-	var fn = $viewEdit.__proto__;
-	var config = $viewEdit.config;
+	var fn = $viewEdit.__proto__;	
 	fn.webUploader = function(_this) {
 		var index;
-		config.upload.pick.id = _this;
-		var uploader = WebUploader.create(config.upload);
+		var $config = $viewEdit.config();
+		$config.upload.pick.id = _this;
+		var uploader = WebUploader.create($config.upload);
 
 		// 判断格式
 		uploader.on("error", function(type) {

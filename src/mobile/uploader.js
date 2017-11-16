@@ -1,11 +1,11 @@
 !(function(win, $, $viewEdit) {
 	"use strict";
-	var fn = $viewEdit.__proto__;
-	var config = $viewEdit.config;
+	var fn = $viewEdit.__proto__;	
 	fn.webUploader = function(_this) {
 		var index;
-		config.upload.pick.id = _this;
-		var uploader = WebUploader.create(config.upload);
+		var $config = $viewEdit.config();
+		$config.upload.pick.id = _this;
+		var uploader = WebUploader.create($config.upload);
 
 		// 判断格式
 		uploader.on("error", function(type) {

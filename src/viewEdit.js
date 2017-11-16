@@ -3,7 +3,7 @@
 	/*
 	  	构建基础配置
 	  */
-	var config = {
+	var $config = {
 		// 绑定编辑模块KEY
 		el: "ve-key",
 		// 标签内部新增key
@@ -48,43 +48,42 @@
 
 	};
 
-	var viewEdit = function() {
+	var $VE = function() {
 		this.v = '1.0.0';
-
-		// 查找绑定可编辑的元素
-		this.el = function() {
-			return $("*[" + this.config.el + "]");
-		};
-
-		// 复值config
-		this.config = config;
-
-		// 默认数据缓存队列
-		this.cacheList = function(){
-			var cacheList = [];
-			var $this = this;
-			$.each(this.el(), function() {
-				var valData = {
-					"key": $(this).attr($this.config.el),
-					"value": $(this).html()
-				};
-				cacheList.push(valData);
-			});
-			return cacheList;
-		};
-
-		// 初始化
-		this.init = function(api) {
-			var $this = this;
-			this.config = $.extend(true,$this.api.copy(config),api);
-			// 启动插件
-			this.resize();
-			return this;
-		}
-
 	};
 
-	var fn = viewEdit.prototype;
+	var fn = $VE.prototype;
+	// 查找绑定可编辑的元素
+	fn.el = function() {
+		return $("*[" + $config.el + "]");
+	};
+	// 初始化
+	fn.init = function(api) {
+		var $this = this;
+		$config = $.extend(true,$config,api);
+		// 启动插件
+		this.resize();
+		return this;
+	}
+
+	// 默认数据缓存队列
+	fn.cacheList = function(){
+		var cacheList = [];
+		var $this = this;
+		$.each(this.el(), function() {
+			var valData = {
+				"key": $(this).attr($config.el),
+				"value": $(this).html()
+			};
+			cacheList.push(valData);
+		});
+		return cacheList;
+	};
+
+	// 复值$config
+	fn.config = function(){
+		return this.api.copy($config);
+	};
 
 	// 判断取出图片地址 
 	fn.isSrc = function($src) {
@@ -111,5 +110,5 @@
 		win.console && console.error && console.error('viewEidt hint: ' + msg);
 	};
 
-	window.VE = new viewEdit();
+	window.VE = new $VE();
 })(window, $);
