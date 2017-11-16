@@ -9,7 +9,7 @@
 				break;
 
 			case "block":
-				return '<div class="block_l blockbk"></div><div class="block_r blockbk"></div><div class="block_t blockbk"></div><div class="block_b blockbk"></div><div class="block_main blockbk">新加模块</div>';
+				return '<div class="block_l blockbk"></div><div class="block_r blockbk"></div><div class="block_t blockbk"></div><div class="block_b blockbk"></div><div class="block_main blockbk">新增模板</div>';
 				break;
 
 			case "img":
@@ -253,7 +253,7 @@
 				};
 			}
 		};
-	};
+	}; 
 
 	// 判断可编辑区域内所有编辑对象的类型并且绑定事件
 	fn.ergodicType = function(_this) {

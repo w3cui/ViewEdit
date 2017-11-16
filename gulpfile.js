@@ -57,7 +57,7 @@ var argv = require('minimist')(process.argv.slice(2), {
         return '(' + argv.mod.replace(/,/g, '|') + ')';
       }() : '',
       src =[    
-        './node_modules/jquery/dist/jquery.js',
+        //'./node_modules/jquery/dist/jquery.js',
         './node_modules/html2canvas/dist/html2canvas.js',
         './node_modules/webuploader/dist/webuploader.html5only.js',
         './src/**/viewEdit.js',
@@ -81,7 +81,7 @@ var argv = require('minimist')(process.argv.slice(2), {
   alljs: function(ver) {
     ver = ver === 'open';
     var src = [    
-        './node_modules/jquery/dist/jquery.js',
+        //'./node_modules/jquery/dist/jquery.js',
         './node_modules/html2canvas/dist/html2canvas.js',        
         './node_modules/webuploader/dist/webuploader.html5only.js',
         './src/**/viewEdit.js',

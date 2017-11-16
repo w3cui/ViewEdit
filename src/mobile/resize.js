@@ -13,7 +13,7 @@
 
 		if (this.cacheList().length == 0) return false;
 		this.elockOff();
-		
+
 		// 添加传窗体变化是动态开启插件
 		$(window).resize(function(){
 			$this.elockOff();
@@ -23,17 +23,17 @@
 		var datahiden = new Array();
 		$.each(this.el(), function(index) {
 			if ($(this).is(":hidden")) {
-				datahiden.push($(this).attr($viewEdit.config.el));
+				datahiden.push($(this).attr($config.el));
 			}
 		});
 		setInterval(function() {
-			$.each($("*[" + $viewEdit.config.el + "]:hidden"), function(index, val) {
-				if ($(this).attr($viewEdit.config.el) != datahiden[index]) {
+			$.each($("*[" + $config.el + "]:hidden"), function(index, val) {
+				if ($(this).attr($config.el) != datahiden[index]) {
 					$this.elockOff();
 					datahiden = new Array();
 					$.each($this.el(), function(index) {
 						if ($(this).is(":hidden")) {
-							datahiden.push($(this).attr($viewEdit.config.el));
+							datahiden.push($(this).attr($config.el));
 						}
 					});
 					return false;
@@ -95,7 +95,7 @@
 
 				},function(data){
 					if(fn.onSavedataSucces){
-						fn.onSavedataSucces(1,data);
+						fn.onSavedataSucces(data.status,data);
 						return;
 					}						
 					$viewEdit.layer.msg("链接服务器失败！", {

@@ -40,7 +40,7 @@
 
 			// 自定义回调处理
 			if(fn.onUploadSuccess){
-				fn.onUploadSuccess(_this, file, response);
+				fn.onUploadSuccess($(_this), file, response);
 				return false;
 			};
 

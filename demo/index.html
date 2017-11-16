@@ -16,17 +16,19 @@
 		</div>
 	</body>
 </html>
+<script type="text/javascript" src="http://localhost:3000/node_modules/jquery/dist/jquery.js"></script>
 <script type="text/javascript" src="http://localhost:3000/build/ViewEdit.js"></script>
 <script type="text/javascript">
 	window.onload = function(){
 
 		var edit = VE.init({
 			el:"page-key",
+			serverUrl:"/api/page/savePage",
 			formData:{
 				port:"wap",
 			},
 			upload:{
-				server:"测试"
+				server:"{{ urlencode(request()->path()) }}",				
 			}
 		});
 
@@ -37,7 +39,8 @@
 
 		// 保存数据成功
 		edit.on("savedataSucces",function(isSucces,data){
-			alert("2");
+			alert("保存数据回到自定义处理！");
+			console.log(isSucces,data);
 		});
 		console.log(edit);
 	}
