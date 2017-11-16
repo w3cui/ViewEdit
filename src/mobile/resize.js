@@ -12,8 +12,12 @@
 		}, "main"));
 
 		if (this.cacheList().length == 0) return false;
-
 		this.elockOff();
+		
+		// 添加传窗体变化是动态开启插件
+		$(window).resize(function(){
+			$this.elockOff();
+		});
 
 		// 性能优化 检查显示的元素调用编辑按钮
 		var datahiden = new Array();
