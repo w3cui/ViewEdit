@@ -16,6 +16,7 @@
 		staticUrl: $("script").last().attr("src").match(/(http|https):\/\/([^\/]+)\//)[0],
 		// 保存数据附加参数
 		formData: {
+			// 识别来源
 			pageUrl: window.location.pathname,
 			// 来源设备端口
 			port: "PC",

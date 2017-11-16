@@ -3,17 +3,72 @@
 	<head></head>
 	<link rel="stylesheet" type="text/css" href="http://localhost:3000/build/style/ViewEdit.css">
 	<body>
-		<div style="position: relative; top: 50px;left: 100px; float: left; width: 500px; padding: 10px; background: #f1f1f1; text-align: center;" page-key="key001" >
+		<div style="height: 50px;"></div>
+		<div style="position: relative; left: 100px; float: left; width: 500px; padding: 10px; background: #f1f1f1; text-align: center;" page-key="key001" >
 			<p >双击编辑文本</p>
 			<p ><a href="">链接编辑</a></p>
 			<img ve-add-tpl style="height: 200px;" data-original="http://pic.qiantucdn.com/58pic/22/06/55/57b2d9a265f53_1024.jpg?x-oss-process=image/resize,w_250,h_250" src="http://pic.qiantucdn.com/58pic/22/06/55/57b2d9a265f53_1024.jpg?x-oss-process=image/resize,w_250,h_250" alt="" style="display: block;">
 		</div>
-		<div style="position: relative; top: 50px;left: 100px; margin-left: 50px;padding: 10px; float: left; width: 500px;background: #f1f1f1; text-align: center; " page-key="key002" >
+		<div style="position: relative; left: 100px; margin-left: 50px;padding: 10px; float: left; width: 500px;background: #f1f1f1; text-align: center; " page-key="key002" >
 			<p>编辑区域</p>
 			<p><a href="">编辑链接</a></p>
 			<a href="" style="display: block; "><img style="height: 100px;" data-original="http://pic.qiantucdn.com/58pic/22/06/55/57b2d9a265f53_1024.jpg?x-oss-process=image/resize,w_250,h_250" src="http://pic.qiantucdn.com/58pic/22/06/55/57b2d9a265f53_1024.jpg?x-oss-process=image/resize,w_250,h_250" alt="" style="display: block;"></a>
 			<a href=""  style="display: block;"><img style="height: 200px;" data-original="http://pic.qiantucdn.com/58pic/22/06/55/57b2d9a265f53_1024.jpg?x-oss-process=image/resize,w_250,h_250" src="http://pic.qiantucdn.com/58pic/22/06/55/57b2d9a265f53_1024.jpg?x-oss-process=image/resize,w_250,h_250" alt="" style="display: block;"></a>
 		</div>
+	<div style="clear: both; height: 50px;"></div>
+	<hr>
+	<h3 style="clear: both; padding:20px 0; ">配置说明</h3>
+	<hr>
+	<pre style="padding-bottom: 100px;">
+		<code>
+			var $config = {
+				// 绑定编辑模块KEY
+				el: "ve-key",
+				// 标签内部新增key
+				addTemplate:"ve-add-tpl",
+				// 提交地址
+				serverUrl: "/api/page/savePage",
+				// 扩展按钮
+				btn: "<a>退出</a>",
+				// 获取资源项目地址
+				staticUrl: $("script").last().attr("src").match(/(http|https):\/\/([^\/]+)\//)[0],
+				// 保存数据附加参数
+				formData: {
+					pageUrl: window.location.pathname,
+					// 来源设备端口
+					port: "PC",
+				},
+				// 百度上传组件配置
+				upload: {
+					// swf文件路径
+					swf: 'http://cdn.staticfile.org/webuploader/0.1.0/Uploader.swf',
+					// 文件接收服务端。
+					server: '/api/attachment/webupload?elementid=&_time=',
+					// 内部根据当前运行是创建，可能是input元素，也可能是flash.
+					pick: {
+						id: "",
+						multiple: false,
+					},
+					//现在最大上传数
+					fileNumLimit: 9999,
+					// 上传格式
+					extensions: 'jpg|jpeg|gif|png|bmp',
+					// 是否选择就上传
+					auto: true,
+					accept: {
+						title: 'Images',
+						extensions: 'gif,jpg,jpeg,bmp,png',
+						mimeTypes: 'image/gif,image/jpg,image/jpeg,image/bmp,image/png,image/bmp'
+					},
+					// 不压缩image, 默认如果是jpeg，文件上传前会压缩一把再上传！
+					resize: false
+				}
+			};
+			VE.init($config);
+		</code>
+	</pre>
+		
+
 	</body>
 </html>
 <script type="text/javascript" src="http://localhost:3000/node_modules/jquery/dist/jquery.js"></script>
@@ -32,9 +87,15 @@
 			}
 		});
 
-		// 上传插件图片上传回调成功
+		/* 
+		 * 上传插件图片上传回调成功
+		 * @event => 修改图片回显dom
+		 * @file => webupload回调file
+		 * @response => 服务器回调数据
+		*/
 		edit.on("uploadSuccess",function(event,file,response){
-			alert("1");
+			console.log(event,file,response)
+			alert("图片上传成功回调！");
 		});
 
 		// 保存数据成功
