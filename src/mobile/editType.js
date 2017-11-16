@@ -52,13 +52,20 @@
 					imglist.push(tplList);
 				});
 
-				$this.layer.open({
+				var index = $this.popup.open({
+					title: "编辑图片",
 					content: '<ul class="blockimglist"></ul>',
-					area: ["1000px", "600px"],
+					area: ["", "600px"],
+					width:1000,
+					height:600,
 					type: 1,
 					btn: ['保存', '取消'], //按钮
-					yes: function(index, layero) {
+					onBtn: function(type, layero) {
 						var msgthis = true;
+						if(type != "保存"){ 
+							$this.popup.close(index);
+							return false;
+						}
 						$.each($(".blockimglist li"), function(index, val) {
 							var srcObject = {
 								urlsrc: $(this).find("input[name='urlsrc']"),
@@ -67,7 +74,7 @@
 							};
 							if ($(this).find("input[type='checkbox']").is(':checked')) {
 								if ((srcObject.minsrc.val()[0] != "@" || srcObject.maxsrc.val()[0] != "@") && (srcObject.minsrc.val()[0] != "?" || srcObject.maxsrc.val()[0] != "?")) {
-									$this.layer.msg("请参照“@250h_250w_1e_1c或?x-oss-process=image/resize,w_250,h_250”格式书写图片尺寸！");
+									$this.popup.msg("请参照“@250h_250w_1e_1c或?x-oss-process=image/resize,w_250,h_250”格式书写图片尺寸！");
 									msgthis = false;
 									return false;
 								}
@@ -84,26 +91,29 @@
 							$(prentThis).find("img:eq(" + index + ")").attr("alt", $(this).find("textarea[name='alt']").val());
 						});
 						if (msgthis) {
-							$this.layer.msg('操作成功！');
-							$this.layer.close(index);
+							$this.popup.msg('操作成功！');
+							$this.popup.close(index);
 						}
+					},
+					success:function(){
+						// 载入webuploader
+						$(".blockimglist").append(imglist).find("input[type='file']");
+						$(".blockimglist input[name='checkbox']").change(function() {
+							if ($(this).is(":checked")) {
+								$(this).parents("li").find(".divupimg").show();
+							} else {
+								$(this).parents("li").find(".divupimg").hide();
+							}
+						});
+						// 初始化webuploader
+						$.each($(".blockimglist").find("a"), function() {
+							$this.webUploader("#" + $(this).attr("id"));
+						});
 					}
 				});
 
 
-				// 载入webuploader
-				$(".blockimglist").append(imglist).find("input[type='file']");
-				$(".blockimglist input[name='checkbox']").change(function() {
-					if ($(this).is(":checked")) {
-						$(this).parents("li").find(".divupimg").show();
-					} else {
-						$(this).parents("li").find(".divupimg").hide();
-					}
-				});
-				// 初始化webuploader
-				$.each($(".blockimglist").find("a"), function() {
-					$this.webUploader("#" + $(this).attr("id"));
-				});
+				
 
 			},
 
@@ -139,22 +149,33 @@
 					linklist.push(tplList);
 				});
 
-				$this.layer.confirm('<ul class="blockimglist"></ul>', {
-					area: ["1000px", "600px"],
+				var index = $this.popup.open({
+					title: "编辑链接",
+					content: '<ul class="blockimglist"></ul>',
+					width:1000,
+					height:600,
 					type: 1,
-					btn: ['保存', '取消'] //按钮
-				}, function(index, layero) {
-					$.each($(".blockimglist li"), function(index, val) {						
-						$(prentThis).find("a:eq(" + index + ")")
-							.attr("href", $(this).find("input[name='href']").val())
-							.attr("title", $(this).find("textarea[name='title']").val());
-					});
-					$this.layer.close(index);
-					$this.layer.msg('操作成功！', {
-						icon: 1
-					});
+					btn: ['保存', '取消'], 
+					onBtn: function(type, layero) {
+						if(type != "保存"){ 
+							$this.popup.close(index);
+							return false;
+						}
+						$.each($(".blockimglist li"), function(index, val) {						
+							$(prentThis).find("a:eq(" + index + ")")
+								.attr("href", $(this).find("input[name='href']").val())
+								.attr("title", $(this).find("textarea[name='title']").val());
+						});
+						$this.popup.close(index);
+						$this.popup.msg('操作成功！', {
+							icon: 1
+						});
+
+					},
+					success:function(){
+						$(".blockimglist").append(linklist);
+					}
 				});
-				$(".blockimglist").append(linklist);
 			},
 
 			// 自定义新增模块

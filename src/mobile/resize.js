@@ -58,13 +58,9 @@
 
 		$(".blockBottom").find("a").unbind('click').on("click", function() {
 			if ($(this).text() == "保存") {
-				var index = $viewEdit.layer.load(0, {
-					shade: [0.1, '#fff']
-				});
+				var index = $viewEdit.popup.load();
 				if ($this.contrastList().length == 0) {
-					$viewEdit.layer.msg('请修改后再提交', {
-						icon: 7
-					});
+					$viewEdit.popup.msg('请修改后再提交');
 					return false;
 				}
 				$this.api.ajax({
@@ -76,7 +72,7 @@
 						dataType: "json"
 				},function(data) {
 					
-					$viewEdit.layer.close(index);
+					$viewEdit.popup.close(index);
 
 					if(fn.onSavedataSucces){
 						fn.onSavedataSucces(0,data);
@@ -84,23 +80,19 @@
 					}			
 
 					if (data.status == 200 || data.code == 0) {
-						$viewEdit.layer.msg("保存成功！", {
-							icon: 7
-						});
+						$viewEdit.popup.msg("保存成功！");
 					} else {
-						$viewEdit.layer.msg(data.msg, {
-							icon: 7
-						});
+						$viewEdit.popup.msg(data.msg);
 					}
 
 				},function(data){
+
 					if(fn.onSavedataSucces){
 						fn.onSavedataSucces(data.status,data);
+						$viewEdit.popup.close(index);
 						return;
-					}						
-					$viewEdit.layer.msg("链接服务器失败！", {
-						icon: 7
-					});
+					}
+					$viewEdit.popup.msg("链接服务器失败！");
 					
 				});
 			}
