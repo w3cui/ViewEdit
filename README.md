@@ -8,7 +8,7 @@
  - ["webuploader": "^0.1.8"]
  - ["html2canvas": "^0.5.0-beta4"]
 
-## gulp便宜命令
+## gulp命令
 
 克隆远程库
 ```
