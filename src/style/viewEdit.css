@@ -63,3 +63,5 @@
 .ve-open .ve-btn a.ve-btn-0{ background: #4da1da; }
 .ve-open .ve-btn a.ve-btn-0:hover{background: #ff4e00;}
 .ve-open .ve-center{ overflow:hidden; overflow-y: auto;}
+
+.ve_remove{ position: absolute; z-index: 999;  background: rgb(77, 161, 218); color: #fff; width: 22px; height: 22px; cursor: pointer; line-height: 22px; font-size: 12px; text-align: center;}

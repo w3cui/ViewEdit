@@ -29,6 +29,11 @@
 						<textarea placeholder="Title信息" class="text" name="title"  >' + data.title + '</textarea>\
 					</div></li>';
 				break;
+
+			case "remove":
+				return '<a class="ve_remove" id="'+data.id+'" style="left:'+(data.left+data.width-22)+'px;top:'+data.top+'px" >X</a>';
+				break;
+
 			default:
 				;
 		}

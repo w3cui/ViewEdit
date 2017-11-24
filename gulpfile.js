@@ -1,6 +1,4 @@
 var pkg = require('./package.json');
-// var config = require('./config.json');
-
 var gulp = require('gulp');
 var uglify = require('gulp-uglify');
 var minify = require('gulp-minify-css');

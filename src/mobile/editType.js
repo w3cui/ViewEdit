@@ -180,10 +180,51 @@
 
 			// 自定义新增模块
 			addTpl: function(prentThis, _this) {
-				$(_this).before($(_this).clone());
-				$(_this).removeAttr($config.addTemplate);
+				var appendTpl = $(_this).clone();		
+				var _thi = this;
+				$(_this).before(appendTpl);
+				var ergodic ;
+				$(appendTpl).removeAttr($config.addTemplate).hover(function(){
+					ergodic = _thi.removeTpl(this);
+
+				},function(event){
+					var close = $("#"+ergodic.id).offset();
+					var offset = $(this).offset();
+					var width = parseInt($("#"+ergodic.id).width());
+					var heigth = parseInt($("#"+ergodic.id).height());
+
+				  var relativeX = parseInt(width + close.left);
+				  var relativeY = parseInt(heigth + close.top);
+				  if(event.pageX >= close.left && event.pageX <= relativeX && 
+				  	event.pageY >= close.top && event.pageY <= relativeY ){
+						return false;
+				  }
+				  _thi.removeTpl(this,true);
+					
+				});
+				
 				$this.curve($(_this), $(_this), true);
-				$this.elockOff();
+			},
+
+			// 删除模块
+			removeTpl:function(evn,or){
+				
+				var ergodic = $this.ergodic().calculationErgodic($(evn));
+				ergodic.id ="ve_remove_"+$(evn).prop("tagName")+$(evn).index();
+				if(or){
+					$("#"+ergodic.id).remove();
+					return;
+				}
+				$("#"+ergodic.id).remove();
+
+				var tpl = $($this.template(ergodic,"remove"));
+
+				tpl.unbind("click").click(function(){
+					$(evn).remove();
+					$(this).remove();
+				});
+				$("body").append(tpl);
+				return ergodic;
 			}
 
 		};
