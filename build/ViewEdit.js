@@ -9986,7 +9986,7 @@ module.exports = XHR;
 					$("#"+ergodic.id).remove();
 					return;
 				}
-				$("#"+ergodic.id).remove();
+				$(".ve_remove").remove();
 
 				var tpl = $($this.template(ergodic,"remove"));
 
