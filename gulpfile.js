@@ -59,7 +59,7 @@ var argv = require('minimist')(process.argv.slice(2), {
         './node_modules/html2canvas/dist/html2canvas.js',
         './node_modules/webuploader/dist/webuploader.html5only.js',
         './src/**/viewEdit.js',
-        './src/**/mobile/*.js'
+        './src/**/module/*.js'
       ],
       dir = ver ? 'dist' : 'build';
     
@@ -83,7 +83,7 @@ var argv = require('minimist')(process.argv.slice(2), {
         './node_modules/html2canvas/dist/html2canvas.js',        
         './node_modules/webuploader/dist/webuploader.html5only.js',
         './src/**/viewEdit.js',
-        './src/**/mobile/*.js'
+        './src/**/module/*.js'
       ],
       dir = ver ? 'dist' : 'build';
 
