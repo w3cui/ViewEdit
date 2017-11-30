@@ -9619,6 +9619,7 @@ module.exports = XHR;
 		serverUrl: "/api/page/savePage",
 		// 扩展按钮
 		btn: "<a>退出</a>",
+		btnBottom:true,
 		// 获取资源项目地址
 		staticUrl: $("script").last().attr("src").match(/(http|https):\/\/([^\/]+)\//)[0] || "",
 		// 保存数据附加参数
@@ -10234,7 +10235,7 @@ module.exports = XHR;
 		$.each(this.el(), function(index, val) {
 			$this.ergodicType(this);
 		});
-
+		if(!$config.btnBottom) $(".blockBottom").hide();
 		$(".blockBottom").find("a").unbind('click').on("click", function() {
 			if ($(this).text() == "保存") {
 				var index = $viewEdit.popup.load();

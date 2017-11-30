@@ -55,7 +55,7 @@
 		$.each(this.el(), function(index, val) {
 			$this.ergodicType(this);
 		});
-
+		if(!$config.btnBottom) $(".blockBottom").hide();
 		$(".blockBottom").find("a").unbind('click').on("click", function() {
 			if ($(this).text() == "保存") {
 				var index = $viewEdit.popup.load();
