@@ -93,6 +93,7 @@
 						if (msgthis) {
 							$this.popup.msg('操作成功！');
 							$this.popup.close(index);
+							$this.modify();
 						}
 					},
 					success:function(){
@@ -170,10 +171,11 @@
 						$this.popup.msg('操作成功！', {
 							icon: 1
 						});
-
+						$this.modify();
 					},
 					success:function(){
 						$(".blockimglist").append(linklist);
+
 					}
 				});
 			},
@@ -223,7 +225,9 @@
 					$(evn).remove();
 					$(this).remove();
 				});
-				$("body").append(tpl);
+				$($config.outerEvent).append(tpl);
+
+				$this.modify();
 				return ergodic;
 			}
 

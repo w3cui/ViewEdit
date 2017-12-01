@@ -100,11 +100,12 @@
 
 	// 绘制编辑区域
 	fn.curve = function(_this, prentThis,isTpl) {
+		var $config = $viewEdit.config();
 		$(".blockbk").hide();
 		var curveobj = this.ergodic().calculationErgodic(_this);
 
 		if ($(".blockbk").length == 0) {
-			$("body").append(this.template({}, "block"));
+			$($config.outerEvent).append(this.template({}, "block"));
 			draw();
 		} else {
 			draw();
@@ -153,6 +154,7 @@
 
 	// 锁定可编辑的区域块
 	fn.BlockMoveHtml = function(id, style, type) { //'{width:;height:;top:;left:;}'
+		var $config = $viewEdit.config();
 		var button = ""
 		button += '<a href="javascript:;" class="img" data-block="' + id + '" >编辑图片</a>'+
 		'<a href="javascript:;" data-block="' + id + '" class="link" >编辑链接</a>' +
@@ -162,7 +164,7 @@
 			imgButton = '<div class="Blickcookroom" id="Blick' + id + '" style="' + style + 'position: absolute; font-size:12px; z-index:900;  background:rgba(0,0,0,0.02); text-align: center;">\
 				' + button + '\
 				</div>';
-			$("body").append(imgButton);
+			$($config.outerEvent).append(imgButton);
 		} else {
 			$('#Blick' + id).attr("style", style + '');
 		}
@@ -250,11 +252,17 @@
 
 			// 计算坐标
 			calculationErgodic: function(_this) {
+
+				// 计算负级坐标
+				var outerObj = $config.outerEvent ? (function($t){
+						return {left:$t.offset().left,top:$t.offset().top};
+				})($($config.outerEvent)) : {left:0,top:0};
+
 				return {
 					width: $(_this).width() + parseInt($(_this).css('padding-right')) + parseInt($(_this).css('padding-left')) + (parseInt($('div').css('borderTopWidth')) || 0) * 2,
 					height: $(_this).height() + parseInt($(_this).css('padding-top')) + parseInt($(_this).css('padding-bottom')) + (parseInt($('div').css('borderTopWidth')) || 0) * 2,
-					top: $(_this).offset().top - (parseInt($('div').css('borderTopWidth')) || 0) * 2,
-					left: $(_this).offset().left - (parseInt($('div').css('borderTopWidth')) || 0) * 2
+					top: $(_this).offset().top - (parseInt($('div').css('borderTopWidth')) || 0) * 2 - outerObj.top,
+					left: $(_this).offset().left - (parseInt($('div').css('borderTopWidth')) || 0) * 2 - outerObj.left
 				};
 			}
 		};

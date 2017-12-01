@@ -9613,12 +9613,15 @@ module.exports = XHR;
 	var $config = {
 		// 绑定编辑模块KEY
 		el: "ve-key",
+		// 配置最外层编辑区域 默认 "body"
+		outerEvent:"html",
 		// 标签内部新增key
 		addTemplate:"ve-add-tpl",
 		// 提交地址
 		serverUrl: "/api/page/savePage",
 		// 扩展按钮
 		btn: "<a>退出</a>",
+		// 开关下方按钮显示
 		btnBottom:true,
 		// 获取资源项目地址
 		staticUrl: $("script").last().attr("src").match(/(http|https):\/\/([^\/]+)\//)[0] || "",
@@ -9767,9 +9770,20 @@ module.exports = XHR;
 			case "savedataSucces":
 				fn.onSavedataSucces = callback;
 			break;
+			case "modifySucces":
+				fn.onModifySucces = callback;
+			break;
 			
-		}	
+		}
 	};
+
+	// 页面统一处理
+	fn.modify = function(){
+		if(!this.onModifySucces) return false;
+		var html = $("<div>"+$($viewEdit.config.outerEvent).html()+"</div>");
+		html.find(".Blickcookroom,.blockbk,.ve_remove").remove()
+		this.onModifySucces(html.html());
+	}
 })(window, $, window.VE);!(function(win, $, $viewEdit) {
 	"use strict";
 	// 初始化
@@ -9865,6 +9879,7 @@ module.exports = XHR;
 						if (msgthis) {
 							$this.popup.msg('操作成功！');
 							$this.popup.close(index);
+							$this.modify();
 						}
 					},
 					success:function(){
@@ -9942,10 +9957,11 @@ module.exports = XHR;
 						$this.popup.msg('操作成功！', {
 							icon: 1
 						});
-
+						$this.modify();
 					},
 					success:function(){
 						$(".blockimglist").append(linklist);
+
 					}
 				});
 			},
@@ -9995,7 +10011,9 @@ module.exports = XHR;
 					$(evn).remove();
 					$(this).remove();
 				});
-				$("body").append(tpl);
+				$($config.outerEvent).append(tpl);
+
+				$this.modify();
 				return ergodic;
 			}
 
@@ -10186,10 +10204,12 @@ module.exports = XHR;
 	fn.resize = function() {
 		var $this = this;
 		var $config = $viewEdit.config();
-
-		$("body").append(this.template({
-			addBtn: $config.btn
-		}, "main"));
+		if($($config.outerEvent).length==0){
+			$($config.outerEvent).append(this.template({
+					addBtn: $config.btn
+				}, "main"));
+		}
+		
 
 		if (this.cacheList().length == 0) return false;
 		this.elockOff();
@@ -10220,11 +10240,13 @@ module.exports = XHR;
 				}
 			});
 		}, 1000);
-
+		$this.modify();
 		return this;
 	};
-	// 取消编辑
-	fn.elockNo = function() {};
+	// 消耗插件
+	fn.destroy = function() {
+		$(".Blickcookroom,.blockbk,.ve_remove").remove();
+	};
 
 	// 启动编辑
 	fn.elockOff = function() {
@@ -10305,12 +10327,17 @@ module.exports = XHR;
 			$(this).focus().blur(function() {
 				// clearInterval(set2);
 				$this.el().find("*").removeAttr('contentEditable');
+
+				$this.modify();
+
 			});
 		}).unbind('hover').hover(function() {
 			$this.curve($(this).parents("*[" + $config.el + "]"), $(this).parents("*[" + $config.el + "]"));
 		}, function() {
 			$(".blockbk").hide();
 		});
+
+
 	};
 
 
@@ -10417,11 +10444,12 @@ module.exports = XHR;
 
 	// 绘制编辑区域
 	fn.curve = function(_this, prentThis,isTpl) {
+		var $config = $viewEdit.config();
 		$(".blockbk").hide();
 		var curveobj = this.ergodic().calculationErgodic(_this);
 
 		if ($(".blockbk").length == 0) {
-			$("body").append(this.template({}, "block"));
+			$($config.outerEvent).append(this.template({}, "block"));
 			draw();
 		} else {
 			draw();
@@ -10470,6 +10498,7 @@ module.exports = XHR;
 
 	// 锁定可编辑的区域块
 	fn.BlockMoveHtml = function(id, style, type) { //'{width:;height:;top:;left:;}'
+		var $config = $viewEdit.config();
 		var button = ""
 		button += '<a href="javascript:;" class="img" data-block="' + id + '" >编辑图片</a>'+
 		'<a href="javascript:;" data-block="' + id + '" class="link" >编辑链接</a>' +
@@ -10479,7 +10508,7 @@ module.exports = XHR;
 			imgButton = '<div class="Blickcookroom" id="Blick' + id + '" style="' + style + 'position: absolute; font-size:12px; z-index:900;  background:rgba(0,0,0,0.02); text-align: center;">\
 				' + button + '\
 				</div>';
-			$("body").append(imgButton);
+			$($config.outerEvent).append(imgButton);
 		} else {
 			$('#Blick' + id).attr("style", style + '');
 		}
@@ -10567,11 +10596,17 @@ module.exports = XHR;
 
 			// 计算坐标
 			calculationErgodic: function(_this) {
+
+				// 计算负级坐标
+				var outerObj = $config.outerEvent ? (function($t){
+						return {left:$t.offset().left,top:$t.offset().top};
+				})($($config.outerEvent)) : {left:0,top:0};
+
 				return {
 					width: $(_this).width() + parseInt($(_this).css('padding-right')) + parseInt($(_this).css('padding-left')) + (parseInt($('div').css('borderTopWidth')) || 0) * 2,
 					height: $(_this).height() + parseInt($(_this).css('padding-top')) + parseInt($(_this).css('padding-bottom')) + (parseInt($('div').css('borderTopWidth')) || 0) * 2,
-					top: $(_this).offset().top - (parseInt($('div').css('borderTopWidth')) || 0) * 2,
-					left: $(_this).offset().left - (parseInt($('div').css('borderTopWidth')) || 0) * 2
+					top: $(_this).offset().top - (parseInt($('div').css('borderTopWidth')) || 0) * 2 - outerObj.top,
+					left: $(_this).offset().left - (parseInt($('div').css('borderTopWidth')) || 0) * 2 - outerObj.left
 				};
 			}
 		};

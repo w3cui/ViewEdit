@@ -6,10 +6,12 @@
 	fn.resize = function() {
 		var $this = this;
 		var $config = $viewEdit.config();
-
-		$("body").append(this.template({
-			addBtn: $config.btn
-		}, "main"));
+		if($($config.outerEvent).length==0){
+			$($config.outerEvent).append(this.template({
+					addBtn: $config.btn
+				}, "main"));
+		}
+		
 
 		if (this.cacheList().length == 0) return false;
 		this.elockOff();
@@ -40,11 +42,13 @@
 				}
 			});
 		}, 1000);
-
+		$this.modify();
 		return this;
 	};
-	// 取消编辑
-	fn.elockNo = function() {};
+	// 消耗插件
+	fn.destroy = function() {
+		$(".Blickcookroom,.blockbk,.ve_remove").remove();
+	};
 
 	// 启动编辑
 	fn.elockOff = function() {
@@ -125,12 +129,17 @@
 			$(this).focus().blur(function() {
 				// clearInterval(set2);
 				$this.el().find("*").removeAttr('contentEditable');
+
+				$this.modify();
+
 			});
 		}).unbind('hover').hover(function() {
 			$this.curve($(this).parents("*[" + $config.el + "]"), $(this).parents("*[" + $config.el + "]"));
 		}, function() {
 			$(".blockbk").hide();
 		});
+
+
 	};
 
 

@@ -6,12 +6,15 @@
 	var $config = {
 		// 绑定编辑模块KEY
 		el: "ve-key",
+		// 配置最外层编辑区域 默认 "body"
+		outerEvent:"html",
 		// 标签内部新增key
 		addTemplate:"ve-add-tpl",
 		// 提交地址
 		serverUrl: "/api/page/savePage",
 		// 扩展按钮
 		btn: "<a>退出</a>",
+		// 开关下方按钮显示
 		btnBottom:true,
 		// 获取资源项目地址
 		staticUrl: $("script").last().attr("src").match(/(http|https):\/\/([^\/]+)\//)[0] || "",
