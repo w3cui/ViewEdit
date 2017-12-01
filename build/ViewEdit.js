@@ -9780,7 +9780,7 @@ module.exports = XHR;
 	// 页面统一处理
 	fn.modify = function(){
 		if(!this.onModifySucces) return false;
-		var html = $("<div>"+$($viewEdit.config.outerEvent).html()+"</div>");
+		var html = $("<div>"+$($viewEdit.config().outerEvent).html()+"</div>");
 		html.find(".Blickcookroom,.blockbk,.ve_remove").remove()
 		this.onModifySucces(html.html());
 	}
@@ -9971,27 +9971,31 @@ module.exports = XHR;
 				var appendTpl = $(_this).clone();		
 				var _thi = this;
 				$(_this).before(appendTpl);
-				var ergodic ;
-				$(appendTpl).removeAttr($config.addTemplate).hover(function(){
-					ergodic = _thi.removeTpl(this);
+				
+				$(appendTpl).attr($config.addTemplate,$(prentThis).attr($config.el));
+				this.onRemoveAdd(appendTpl,prentThis);				
+				$this.curve($(_this), $(_this), true);
+			},
 
+			// 显示删除按钮
+			onRemoveAdd:function(el,prentThis){
+				var ergodic ;
+				var _thi = this;
+				$(el).attr($config.addTemplate,$(prentThis).attr($config.el)).hover(function(){
+					ergodic = _thi.removeTpl(this);
 				},function(event){
 					var close = $("#"+ergodic.id).offset();
 					var offset = $(this).offset();
 					var width = parseInt($("#"+ergodic.id).width());
 					var heigth = parseInt($("#"+ergodic.id).height());
-
 				  var relativeX = parseInt(width + close.left);
 				  var relativeY = parseInt(heigth + close.top);
 				  if(event.pageX >= close.left && event.pageX <= relativeX && 
 				  	event.pageY >= close.top && event.pageY <= relativeY ){
 						return false;
 				  }
-				  _thi.removeTpl(this,true);
-					
+				  _thi.removeTpl(this,true);					
 				});
-				
-				$this.curve($(_this), $(_this), true);
 			},
 
 			// 删除模块
@@ -10615,6 +10619,7 @@ module.exports = XHR;
 	// 判断可编辑区域内所有编辑对象的类型并且绑定事件
 	fn.ergodicType = function(_this) {
 		var $config = $viewEdit.config();
+		var $editType = this.editType();
 		var $this = this,
 			$ergodicType = this.ergodic();
 		$.each($(_this).find("*"), function() {
@@ -10622,7 +10627,11 @@ module.exports = XHR;
 			// 添加自定义模块
 			if(typeof $(this).attr($config.addTemplate) != "undefined"){
 				$ergodicType.addTplErgodic(this, _this);
+					if($(this).attr($config.addTemplate) == $(_this).attr($config.el)){
+					$editType.onRemoveAdd(this,_this);
+				}
 			}
+			
 
 			switch (this.tagName) {
 				case "IMG": //图片编辑

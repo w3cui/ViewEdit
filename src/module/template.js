@@ -271,6 +271,7 @@
 	// 判断可编辑区域内所有编辑对象的类型并且绑定事件
 	fn.ergodicType = function(_this) {
 		var $config = $viewEdit.config();
+		var $editType = this.editType();
 		var $this = this,
 			$ergodicType = this.ergodic();
 		$.each($(_this).find("*"), function() {
@@ -278,7 +279,11 @@
 			// 添加自定义模块
 			if(typeof $(this).attr($config.addTemplate) != "undefined"){
 				$ergodicType.addTplErgodic(this, _this);
+					if($(this).attr($config.addTemplate) == $(_this).attr($config.el)){
+					$editType.onRemoveAdd(this,_this);
+				}
 			}
+			
 
 			switch (this.tagName) {
 				case "IMG": //图片编辑

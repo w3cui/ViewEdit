@@ -185,27 +185,31 @@
 				var appendTpl = $(_this).clone();		
 				var _thi = this;
 				$(_this).before(appendTpl);
-				var ergodic ;
-				$(appendTpl).removeAttr($config.addTemplate).hover(function(){
-					ergodic = _thi.removeTpl(this);
+				
+				$(appendTpl).attr($config.addTemplate,$(prentThis).attr($config.el));
+				this.onRemoveAdd(appendTpl,prentThis);				
+				$this.curve($(_this), $(_this), true);
+			},
 
+			// 显示删除按钮
+			onRemoveAdd:function(el,prentThis){
+				var ergodic ;
+				var _thi = this;
+				$(el).attr($config.addTemplate,$(prentThis).attr($config.el)).hover(function(){
+					ergodic = _thi.removeTpl(this);
 				},function(event){
 					var close = $("#"+ergodic.id).offset();
 					var offset = $(this).offset();
 					var width = parseInt($("#"+ergodic.id).width());
 					var heigth = parseInt($("#"+ergodic.id).height());
-
 				  var relativeX = parseInt(width + close.left);
 				  var relativeY = parseInt(heigth + close.top);
 				  if(event.pageX >= close.left && event.pageX <= relativeX && 
 				  	event.pageY >= close.top && event.pageY <= relativeY ){
 						return false;
 				  }
-				  _thi.removeTpl(this,true);
-					
+				  _thi.removeTpl(this,true);					
 				});
-				
-				$this.curve($(_this), $(_this), true);
 			},
 
 			// 删除模块

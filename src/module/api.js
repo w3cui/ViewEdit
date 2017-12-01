@@ -55,7 +55,7 @@
 	// 页面统一处理
 	fn.modify = function(){
 		if(!this.onModifySucces) return false;
-		var html = $("<div>"+$($viewEdit.config.outerEvent).html()+"</div>");
+		var html = $("<div>"+$($viewEdit.config().outerEvent).html()+"</div>");
 		html.find(".Blickcookroom,.blockbk,.ve_remove").remove()
 		this.onModifySucces(html.html());
 	}
