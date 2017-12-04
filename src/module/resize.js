@@ -125,7 +125,6 @@
 			}
 			dbfor = true;
 			$(_this).attr("contentEditable", "true");
-
 			$(this).blur(function() {
 				$(this).removeAttr('contentEditable');
 				$this.modify();

@@ -184,11 +184,15 @@
 			addTpl: function(prentThis, _this) {
 				var appendTpl = $(_this).clone();		
 				var _thi = this;
+				if(appendTpl.prop("tagName") == "A"){
+					appendTpl.click(function(){return false;});
+				}
 				$(_this).before(appendTpl);
-				
 				$(appendTpl).attr($config.addTemplate,$(prentThis).attr($config.el));
 				this.onRemoveAdd(appendTpl,prentThis);				
 				$this.curve($(_this), $(_this), true);
+				
+				$viewEdit.elockOff();
 			},
 
 			// 显示删除按钮
@@ -230,6 +234,7 @@
 					$(evn).remove();
 					$(this).remove();
 					$this.elockOff();
+					return false;
 				});
 				$($config.outerEvent).append(tpl);
 				$this.modify();

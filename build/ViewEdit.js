@@ -9970,11 +9970,15 @@ module.exports = XHR;
 			addTpl: function(prentThis, _this) {
 				var appendTpl = $(_this).clone();		
 				var _thi = this;
+				if(appendTpl.prop("tagName") == "A"){
+					appendTpl.click(function(){return false;});
+				}
 				$(_this).before(appendTpl);
-				
 				$(appendTpl).attr($config.addTemplate,$(prentThis).attr($config.el));
 				this.onRemoveAdd(appendTpl,prentThis);				
 				$this.curve($(_this), $(_this), true);
+				
+				$viewEdit.elockOff();
 			},
 
 			// 显示删除按钮
@@ -10016,6 +10020,7 @@ module.exports = XHR;
 					$(evn).remove();
 					$(this).remove();
 					$this.elockOff();
+					return false;
 				});
 				$($config.outerEvent).append(tpl);
 				$this.modify();
@@ -10328,7 +10333,6 @@ module.exports = XHR;
 			}
 			dbfor = true;
 			$(_this).attr("contentEditable", "true");
-
 			$(this).blur(function() {
 				$(this).removeAttr('contentEditable');
 				$this.modify();
