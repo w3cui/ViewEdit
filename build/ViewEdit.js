@@ -9781,7 +9781,7 @@ module.exports = XHR;
 	fn.modify = function(){
 		if(!this.onModifySucces) return false;
 		var html = $("<div>"+$($viewEdit.config().outerEvent).html()+"</div>");
-		html.find(".Blickcookroom,.blockbk,.ve_remove").remove()
+		//html.find(".Blickcookroom,.blockbk,.ve_remove").remove()
 		this.onModifySucces(html.html());
 	}
 })(window, $, window.VE);!(function(win, $, $viewEdit) {
@@ -9981,10 +9981,11 @@ module.exports = XHR;
 			onRemoveAdd:function(el,prentThis){
 				var ergodic ;
 				var _thi = this;
-				$(el).attr($config.addTemplate,$(prentThis).attr($config.el)).hover(function(){
+				$(el).attr($config.addTemplate,$(prentThis).attr($config.el)).unbind('hover').hover(function(){
 					ergodic = _thi.removeTpl(this);
 				},function(event){
 					var close = $("#"+ergodic.id).offset();
+					if(!close) return false;
 					var offset = $(this).offset();
 					var width = parseInt($("#"+ergodic.id).width());
 					var heigth = parseInt($("#"+ergodic.id).height());
@@ -10014,9 +10015,9 @@ module.exports = XHR;
 				tpl.unbind("click").click(function(){
 					$(evn).remove();
 					$(this).remove();
+					$this.elockOff();
 				});
 				$($config.outerEvent).append(tpl);
-
 				$this.modify();
 				return ergodic;
 			}
@@ -10328,12 +10329,9 @@ module.exports = XHR;
 			dbfor = true;
 			$(_this).attr("contentEditable", "true");
 
-			$(this).focus().blur(function() {
-				// clearInterval(set2);
-				$this.el().find("*").removeAttr('contentEditable');
-
+			$(this).blur(function() {
+				$(this).removeAttr('contentEditable');
 				$this.modify();
-
 			});
 		}).unbind('hover').hover(function() {
 			$this.curve($(this).parents("*[" + $config.el + "]"), $(this).parents("*[" + $config.el + "]"));

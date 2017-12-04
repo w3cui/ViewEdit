@@ -195,10 +195,11 @@
 			onRemoveAdd:function(el,prentThis){
 				var ergodic ;
 				var _thi = this;
-				$(el).attr($config.addTemplate,$(prentThis).attr($config.el)).hover(function(){
+				$(el).attr($config.addTemplate,$(prentThis).attr($config.el)).unbind('hover').hover(function(){
 					ergodic = _thi.removeTpl(this);
 				},function(event){
 					var close = $("#"+ergodic.id).offset();
+					if(!close) return false;
 					var offset = $(this).offset();
 					var width = parseInt($("#"+ergodic.id).width());
 					var heigth = parseInt($("#"+ergodic.id).height());
@@ -228,9 +229,9 @@
 				tpl.unbind("click").click(function(){
 					$(evn).remove();
 					$(this).remove();
+					$this.elockOff();
 				});
 				$($config.outerEvent).append(tpl);
-
 				$this.modify();
 				return ergodic;
 			}

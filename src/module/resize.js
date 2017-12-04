@@ -126,12 +126,9 @@
 			dbfor = true;
 			$(_this).attr("contentEditable", "true");
 
-			$(this).focus().blur(function() {
-				// clearInterval(set2);
-				$this.el().find("*").removeAttr('contentEditable');
-
+			$(this).blur(function() {
+				$(this).removeAttr('contentEditable');
 				$this.modify();
-
 			});
 		}).unbind('hover').hover(function() {
 			$this.curve($(this).parents("*[" + $config.el + "]"), $(this).parents("*[" + $config.el + "]"));
