@@ -57,7 +57,9 @@
 
 		// 获取
 		$.each(this.el(), function(index, val) {
-			$this.ergodicType(this);
+			// 解决ng 中无法找到真实的dom 不能使用虚拟dom查找
+			var el ="*["+$config.el+"="+$(this).attr($config.el)+"]" ;
+			$this.ergodicType(el);
 		});
 		if(!$config.btnBottom) $(".blockBottom").hide();
 		$(".blockBottom").find("a").unbind('click').on("click", function() {
