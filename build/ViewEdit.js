@@ -10345,17 +10345,15 @@ module.exports = XHR;
 				return false;
 			}
 			dbfor = true;
-			$(_this).attr("contentEditable", "true");
-			$(this).blur(function() {
-				$(this).removeAttr('contentEditable');
-				$this.modify();
-			});
+			$(_this).attr("contenteditable", "true");
 		}).unbind('hover').hover(function() {
 			$this.curve($(this).parents("*[" + $config.el + "]"), $(this).parents("*[" + $config.el + "]"));
 		}, function() {
 			$(".blockbk").hide();
+		}).blur(function() {
+			$(this).removeAttr('contenteditable');
+			$this.modify();
 		});
-
 
 	};
 
