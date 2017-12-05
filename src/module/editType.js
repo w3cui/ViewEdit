@@ -235,6 +235,8 @@
 				tpl.unbind("click").click(function(){
 					$(evn).remove();
 					$(this).remove();
+
+					// 这里消耗插件重新启动  暂时没有想到更好的解决方案暂时这样解决
 					setTimeout(function(){
 						$this.destroy();
 						$this.elockOff();

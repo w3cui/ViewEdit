@@ -24,19 +24,27 @@
 	<hr>
 	<pre style="padding-bottom: 100px;">
 		<code>
+			/*
+	  	构建基础配置
+			  */
 			var $config = {
 				// 绑定编辑模块KEY
 				el: "ve-key",
+				// 配置最外层编辑区域 默认 "body"
+				outerEvent:"html",
 				// 标签内部新增key
 				addTemplate:"ve-add-tpl",
 				// 提交地址
 				serverUrl: "/api/page/savePage",
 				// 扩展按钮
 				btn: "<a>退出</a>",
+				// 开关下方按钮显示
+				btnBottom:true,
 				// 获取资源项目地址
-				staticUrl: $("script").last().attr("src").match(/(http|https):\/\/([^\/]+)\//)[0],
+				staticUrl: $("script").last().attr("src").match(/(http|https):\/\/([^\/]+)\//)[0] || "",
 				// 保存数据附加参数
 				formData: {
+					// 识别来源
 					pageUrl: window.location.pathname,
 					// 来源设备端口
 					port: "PC",
@@ -66,6 +74,7 @@
 					// 不压缩image, 默认如果是jpeg，文件上传前会压缩一把再上传！
 					resize: false
 				}
+
 			};
 			VE.init($config);
 		</code>
