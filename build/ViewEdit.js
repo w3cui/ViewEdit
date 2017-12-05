@@ -9988,8 +9988,10 @@ module.exports = XHR;
 				$(el).attr($config.addTemplate,$(prentThis).attr($config.el)).unbind('hover').hover(function(){
 					ergodic = _thi.removeTpl(this);
 				},function(event){
+					// 控制频繁移动触发hover ergodic未获取到对应坐标
+					if(!ergodic) return false;
+
 					var close = $("#"+ergodic.id).offset();
-					if(!close) return false;
 					var offset = $(this).offset();
 					var width = parseInt($("#"+ergodic.id).width());
 					var heigth = parseInt($("#"+ergodic.id).height());
@@ -10019,7 +10021,11 @@ module.exports = XHR;
 				tpl.unbind("click").click(function(){
 					$(evn).remove();
 					$(this).remove();
-					$this.elockOff();
+					setTimeout(function(){
+						$this.destroy();
+						$this.elockOff();
+					},200);
+					
 					return false;
 				});
 				$($config.outerEvent).append(tpl);
@@ -10319,7 +10325,7 @@ module.exports = XHR;
 		var timedbclick = 0,
 			dbfor = false;
 
-		this.el().find("*").unbind('dbclick').dblclick(function() {
+		this.el().find("*").dblclick(function() {
 			var _this = this;
 			if ($(this)[0].tagName == "IMG") return false;
 			var set = setInterval(function() {
@@ -10630,8 +10636,10 @@ module.exports = XHR;
 
 			// 添加自定义模块
 			if(typeof $(this).attr($config.addTemplate) != "undefined"){
+
 				$ergodicType.addTplErgodic(this, _this);
-					if($(this).attr($config.addTemplate) == $(_this).attr($config.el)){
+				if($(this).attr($config.addTemplate) == $(_this).attr($config.el)){
+					console.log(this);
 					$editType.onRemoveAdd(this,_this);
 				}
 			}

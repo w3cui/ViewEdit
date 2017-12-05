@@ -202,8 +202,10 @@
 				$(el).attr($config.addTemplate,$(prentThis).attr($config.el)).unbind('hover').hover(function(){
 					ergodic = _thi.removeTpl(this);
 				},function(event){
+					// 控制频繁移动触发hover ergodic未获取到对应坐标
+					if(!ergodic) return false;
+
 					var close = $("#"+ergodic.id).offset();
-					if(!close) return false;
 					var offset = $(this).offset();
 					var width = parseInt($("#"+ergodic.id).width());
 					var heigth = parseInt($("#"+ergodic.id).height());
@@ -233,7 +235,11 @@
 				tpl.unbind("click").click(function(){
 					$(evn).remove();
 					$(this).remove();
-					$this.elockOff();
+					setTimeout(function(){
+						$this.destroy();
+						$this.elockOff();
+					},200);
+					
 					return false;
 				});
 				$($config.outerEvent).append(tpl);

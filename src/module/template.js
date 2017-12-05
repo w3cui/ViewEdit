@@ -278,8 +278,10 @@
 
 			// 添加自定义模块
 			if(typeof $(this).attr($config.addTemplate) != "undefined"){
+
 				$ergodicType.addTplErgodic(this, _this);
-					if($(this).attr($config.addTemplate) == $(_this).attr($config.el)){
+				if($(this).attr($config.addTemplate) == $(_this).attr($config.el)){
+					console.log(this);
 					$editType.onRemoveAdd(this,_this);
 				}
 			}
