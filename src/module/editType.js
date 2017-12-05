@@ -184,28 +184,32 @@
 			addTpl: function(prentThis, _this) {
 				var appendTpl = $(_this).clone();		
 				var _thi = this;
-				if(appendTpl.prop("tagName") == "A"){
-					appendTpl.click(function(){return false;});
-				}
-				$(_this).before(appendTpl);
-				$(appendTpl).attr($config.addTemplate,$(prentThis).attr($config.el));
-				this.onRemoveAdd(appendTpl,prentThis);				
-				$this.curve($(_this), $(_this), true);
-				
-				$viewEdit.elockOff();
+				$(_this).before(appendTpl);			
+				_thi.onRemoveAdd(appendTpl,prentThis);		
+				$this.curve($(prentThis).find("*["+$config.addTemplate+"='']"), _this, true);
+				// 这里消耗插件重新启动  暂时没有想到更好的解决方案暂时这样解决
+				setTimeout(function(){		      
+					$this.destroy();
+					$this.elockOff();
+				},400);
+
 			},
 
 			// 显示删除按钮
 			onRemoveAdd:function(el,prentThis){
 				var ergodic ;
 				var _thi = this;
-				$(el).attr($config.addTemplate,$(prentThis).attr($config.el)).unbind('hover').hover(function(){
+				$(el).attr($config.addTemplate,$(prentThis).attr($config.el))
+				.unbind('mousemove').mousemove(function(){
 					ergodic = _thi.removeTpl(this);
-				},function(event){
+				});
+				$(el).unbind('mouseout').mouseout(function(event){
+					if(!ergodic) {
+						return false;
+					}
+					var close = $("#"+ergodic.id).offset();					
 					// 控制频繁移动触发hover ergodic未获取到对应坐标
-					if(!ergodic) return false;
-
-					var close = $("#"+ergodic.id).offset();
+					
 					var offset = $(this).offset();
 					var width = parseInt($("#"+ergodic.id).width());
 					var heigth = parseInt($("#"+ergodic.id).height());
@@ -221,7 +225,6 @@
 
 			// 删除模块
 			removeTpl:function(evn,or){
-				
 				var ergodic = $this.ergodic().calculationErgodic($(evn));
 				ergodic.id ="ve_remove_"+$(evn).prop("tagName")+$(evn).index();
 				if(or){
@@ -236,11 +239,11 @@
 					$(evn).remove();
 					$(this).remove();
 
-					// 这里消耗插件重新启动  暂时没有想到更好的解决方案暂时这样解决
+					// 这里消耗插件重新启动  暂时没有想到更好的解决方案暂时这样解决					
 					setTimeout(function(){
 						$this.destroy();
 						$this.elockOff();
-					},200);
+					},400);
 					
 					return false;
 				});

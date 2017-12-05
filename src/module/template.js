@@ -238,9 +238,11 @@
 				}
 				$("#Blick" + $(prentThis).attr($config.el)).find(".addtpl").unbind('click').click(function() {
 					$editType.addTpl(prentThis,_this);
-				}).unbind('hover').hover(function(event) {
-					$this.curve($(_this), $(_this),true);
-				},function(){
+				})
+				.unbind('mousemove').mousemove(function(event) {
+					$this.curve($(prentThis).find("*["+$config.addTemplate+"='']"), $(prentThis),true);
+				})
+				.unbind('mouseout').mouseout(function(){
 					$(".blockbk").hide();
 				});
 			},
@@ -261,8 +263,8 @@
 				return {
 					width: $(_this).width() + parseInt($(_this).css('padding-right')) + parseInt($(_this).css('padding-left')) + (parseInt($('div').css('borderTopWidth')) || 0) * 2,
 					height: $(_this).height() + parseInt($(_this).css('padding-top')) + parseInt($(_this).css('padding-bottom')) + (parseInt($('div').css('borderTopWidth')) || 0) * 2,
-					top: $(_this).offset().top - (parseInt($('div').css('borderTopWidth')) || 0) * 2 - outerObj.top,
-					left: $(_this).offset().left - (parseInt($('div').css('borderTopWidth')) || 0) * 2 - outerObj.left
+					top: $(_this).offset().top - (parseInt($(_this).css('borderTopWidth')) || 0) * 2 - outerObj.top,
+					left: $(_this).offset().left - (parseInt($(_this).css('borderTopWidth')) || 0) * 2 - outerObj.left
 				};
 			}
 		};
@@ -274,14 +276,14 @@
 		var $editType = this.editType();
 		var $this = this,
 			$ergodicType = this.ergodic();
-		$.each($(_this).find("*"), function() {
+		$.each($(_this).find("*"), function(key,v) {
 
 			// 添加自定义模块
 			if(typeof $(this).attr($config.addTemplate) != "undefined"){
-
+				_this = "*["+$config.el+"='"+$(_this).attr($config.el)+"']";
 				$ergodicType.addTplErgodic(this, _this);
-				if($(this).attr($config.addTemplate) == $(_this).attr($config.el)){
-					console.log(this);
+				var t = $(_this).attr($config.el);
+				if($(this).attr($config.addTemplate) == t){
 					$editType.onRemoveAdd(this,_this);
 				}
 			}

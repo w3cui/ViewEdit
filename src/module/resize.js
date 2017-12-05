@@ -111,7 +111,7 @@
 		var timedbclick = 0,
 			dbfor = false;
 
-		this.el().find("*").dblclick(function() {
+		this.el().find("*").unbind('dblclick').dblclick(function() {
 			var _this = this;
 			if ($(this)[0].tagName == "IMG") return false;
 			var set = setInterval(function() {

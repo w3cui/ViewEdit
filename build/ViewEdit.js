@@ -9970,28 +9970,32 @@ module.exports = XHR;
 			addTpl: function(prentThis, _this) {
 				var appendTpl = $(_this).clone();		
 				var _thi = this;
-				if(appendTpl.prop("tagName") == "A"){
-					appendTpl.click(function(){return false;});
-				}
-				$(_this).before(appendTpl);
-				$(appendTpl).attr($config.addTemplate,$(prentThis).attr($config.el));
-				this.onRemoveAdd(appendTpl,prentThis);				
-				$this.curve($(_this), $(_this), true);
-				
-				$viewEdit.elockOff();
+				$(_this).before(appendTpl);			
+				_thi.onRemoveAdd(appendTpl,prentThis);		
+				$this.curve($(prentThis).find("*["+$config.addTemplate+"='']"), _this, true);
+				// 这里消耗插件重新启动  暂时没有想到更好的解决方案暂时这样解决
+				setTimeout(function(){		      
+					$this.destroy();
+					$this.elockOff();
+				},400);
+
 			},
 
 			// 显示删除按钮
 			onRemoveAdd:function(el,prentThis){
 				var ergodic ;
 				var _thi = this;
-				$(el).attr($config.addTemplate,$(prentThis).attr($config.el)).unbind('hover').hover(function(){
+				$(el).attr($config.addTemplate,$(prentThis).attr($config.el))
+				.unbind('mousemove').mousemove(function(){
 					ergodic = _thi.removeTpl(this);
-				},function(event){
+				});
+				$(el).unbind('mouseout').mouseout(function(event){
+					if(!ergodic) {
+						return false;
+					}
+					var close = $("#"+ergodic.id).offset();					
 					// 控制频繁移动触发hover ergodic未获取到对应坐标
-					if(!ergodic) return false;
-
-					var close = $("#"+ergodic.id).offset();
+					
 					var offset = $(this).offset();
 					var width = parseInt($("#"+ergodic.id).width());
 					var heigth = parseInt($("#"+ergodic.id).height());
@@ -10007,7 +10011,6 @@ module.exports = XHR;
 
 			// 删除模块
 			removeTpl:function(evn,or){
-				
 				var ergodic = $this.ergodic().calculationErgodic($(evn));
 				ergodic.id ="ve_remove_"+$(evn).prop("tagName")+$(evn).index();
 				if(or){
@@ -10022,11 +10025,11 @@ module.exports = XHR;
 					$(evn).remove();
 					$(this).remove();
 
-					// 这里消耗插件重新启动  暂时没有想到更好的解决方案暂时这样解决
+					// 这里消耗插件重新启动  暂时没有想到更好的解决方案暂时这样解决					
 					setTimeout(function(){
 						$this.destroy();
 						$this.elockOff();
-					},200);
+					},400);
 					
 					return false;
 				});
@@ -10327,7 +10330,7 @@ module.exports = XHR;
 		var timedbclick = 0,
 			dbfor = false;
 
-		this.el().find("*").dblclick(function() {
+		this.el().find("*").unbind('dblclick').dblclick(function() {
 			var _this = this;
 			if ($(this)[0].tagName == "IMG") return false;
 			var set = setInterval(function() {
@@ -10598,9 +10601,11 @@ module.exports = XHR;
 				}
 				$("#Blick" + $(prentThis).attr($config.el)).find(".addtpl").unbind('click').click(function() {
 					$editType.addTpl(prentThis,_this);
-				}).unbind('hover').hover(function(event) {
-					$this.curve($(_this), $(_this),true);
-				},function(){
+				})
+				.unbind('mousemove').mousemove(function(event) {
+					$this.curve($(prentThis).find("*["+$config.addTemplate+"='']"), $(prentThis),true);
+				})
+				.unbind('mouseout').mouseout(function(){
 					$(".blockbk").hide();
 				});
 			},
@@ -10621,8 +10626,8 @@ module.exports = XHR;
 				return {
 					width: $(_this).width() + parseInt($(_this).css('padding-right')) + parseInt($(_this).css('padding-left')) + (parseInt($('div').css('borderTopWidth')) || 0) * 2,
 					height: $(_this).height() + parseInt($(_this).css('padding-top')) + parseInt($(_this).css('padding-bottom')) + (parseInt($('div').css('borderTopWidth')) || 0) * 2,
-					top: $(_this).offset().top - (parseInt($('div').css('borderTopWidth')) || 0) * 2 - outerObj.top,
-					left: $(_this).offset().left - (parseInt($('div').css('borderTopWidth')) || 0) * 2 - outerObj.left
+					top: $(_this).offset().top - (parseInt($(_this).css('borderTopWidth')) || 0) * 2 - outerObj.top,
+					left: $(_this).offset().left - (parseInt($(_this).css('borderTopWidth')) || 0) * 2 - outerObj.left
 				};
 			}
 		};
@@ -10634,14 +10639,14 @@ module.exports = XHR;
 		var $editType = this.editType();
 		var $this = this,
 			$ergodicType = this.ergodic();
-		$.each($(_this).find("*"), function() {
+		$.each($(_this).find("*"), function(key,v) {
 
 			// 添加自定义模块
 			if(typeof $(this).attr($config.addTemplate) != "undefined"){
-
+				_this = "*["+$config.el+"='"+$(_this).attr($config.el)+"']";
 				$ergodicType.addTplErgodic(this, _this);
-				if($(this).attr($config.addTemplate) == $(_this).attr($config.el)){
-					console.log(this);
+				var t = $(_this).attr($config.el);
+				if($(this).attr($config.addTemplate) == t){
 					$editType.onRemoveAdd(this,_this);
 				}
 			}
