@@ -15,7 +15,7 @@
 		// 扩展按钮
 		btn: "<a>退出</a>",
 		// 开关下方按钮显示
-		btnBottom:true,
+		btnBottom:false,
 		// 获取资源项目地址
 		staticUrl: "",
 		// 保存数据附加参数

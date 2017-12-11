@@ -29,6 +29,8 @@ gulp local 开发预览
 
 ![Image text](http://www.w3cui.com/wp-content/uploads/2014/12/ve.gif)
 
+[DOME展示](https://w3cui.github.io/ViewEdit/demo/index.html)
+
 使用：
 
 1.模板配置
