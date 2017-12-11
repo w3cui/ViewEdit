@@ -17,7 +17,7 @@
 		// 开关下方按钮显示
 		btnBottom:true,
 		// 获取资源项目地址
-		staticUrl: $("script").last().attr("src").match(/(http|https):\/\/([^\/]+)\//)[0] || "",
+		staticUrl: "",
 		// 保存数据附加参数
 		formData: {
 			// 识别来源
