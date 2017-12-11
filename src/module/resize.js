@@ -6,7 +6,7 @@
 	fn.resize = function() {
 		var $this = this;
 		var $config = $viewEdit.config();
-		if($($config.outerEvent).length==0){
+		if($($config.outerEvent).find(".blockBottom").length==0){
 			$($config.outerEvent).append(this.template({
 					addBtn: $config.btn
 				}, "main"));
